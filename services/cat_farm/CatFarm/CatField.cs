@@ -7,7 +7,7 @@ namespace CatFarm;
 
 public class CatField
 {
-    private ConcurrentDictionary<string, Cat> knownCats;
+    private readonly ConcurrentDictionary<string, Cat> knownCats = new();
 
     public CatField()
     {
@@ -23,9 +23,13 @@ public class CatField
         knownCats.Select((content, key) =>
         {
             using var sha1 = SHA1.Create();
-            var hashString = Encoding.UTF8.GetString(sha1.ComputeHash(Encoding.UTF8.GetBytes(key.ToString())));
+            var hashString = string
+                .Concat(
+                    sha1.ComputeHash(Encoding.UTF8.GetBytes(key.ToString()))
+                        .Select(x => x.ToString("X2")));
             try
             {
+                Console.WriteLine(hashString);
                 File.WriteAllText(Path.Combine("cats", hashString), JsonConvert.SerializeObject(content.Value));
             }
             catch (Exception e)

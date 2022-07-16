@@ -8,7 +8,7 @@ namespace CatFarm;
 
 public record Cat
 {
-    public Guid Genome { get; } = Guid.NewGuid();
+    public Guid Genome { get; init; } = Guid.NewGuid();
     public string Name { get; init; }
 
     public byte[] GetImage()
@@ -23,7 +23,7 @@ public record Cat
 
         var head = new RectangularPolygon(0, 3, 16, 3);
         
-        var headColor = Color.FromRgb(genome[4], genome[5], genome[6]);
+        var headColor = Color.FromRgb(genome[3], genome[4], genome[5]);
         
         var betweenEyes = new RectangularPolygon(6, 6, 3, 3);
 
