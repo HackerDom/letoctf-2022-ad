@@ -1,5 +1,6 @@
 #!/bin/bash
 
 chown -R mailbox /var/data
-./scripts/create_secret_key.sh
+./create_secret_key.sh
+./init_db.sh
 exec runuser -u mailbox "$@"

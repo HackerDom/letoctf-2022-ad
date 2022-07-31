@@ -9,7 +9,6 @@ from db import db
 from service import Service
 
 
-db.create_all()
 service = Service()
 
 

@@ -10,10 +10,10 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 COPY src/ .
-COPY scripts/ ./scripts
+COPY scripts/ .
 
 RUN mkdir -p /var/data
-RUN chmod +x ./scripts/*
+RUN chmod +x ./*.sh
 
-ENTRYPOINT ["./scripts/entrypoint.sh"]
-CMD [ "./scripts/run.sh"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD [ "./run.sh"]

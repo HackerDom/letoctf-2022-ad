@@ -21,6 +21,8 @@ services:
     stop_grace_period: 10s
     depends_on:
       - postgres
+    links:
+      - postgres
     ports:
       - "3113:3113"
     volumes:
