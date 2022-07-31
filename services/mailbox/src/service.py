@@ -24,6 +24,11 @@ MessageT = tuple[Optional[Message], ErrorReasonT]
 
 
 class Service:
+    def _get_cipher_from_user(self, user:User) -> Cipher:
+        private_key = CryptoPrivateKey.from_model(user.private_key)
+        public_key = PublicKey.from_private_key(private_key)
+        return Cipher(public_key, private_key)
+
     def get_user_by_user_id(self, user_id:bytes) -> GetUserT:
         return User.query.filter_by(id=user_id).first()
 
@@ -32,11 +37,6 @@ class Service:
 
     def get_msg_by_id(self, msg_id:bytes) -> MessageT:
         return Message.query.filter_by(id=msg_id).first()
-
-    def get_cipher_from_user(self, user:User) -> Cipher:
-        private_key = CryptoPrivateKey.from_model(user.private_key)
-        public_key = PublicKey.from_private_key(private_key)
-        return Cipher(public_key, private_key)
 
     def register(self, username:bytes, password:bytes) -> RegisterT:
         user_id = Hash(username).digest()
@@ -71,7 +71,7 @@ class Service:
         return user, None
 
     def user_to_json(self, user:User, is_private:False) -> UserJsonT:
-        cipher = self.get_cipher_from_user(user)
+        cipher = self._get_cipher_from_user(user)
         res = {
             'id': user.id.hex(),
             'username': b64encode(user.username).decode(),
@@ -113,7 +113,7 @@ class Service:
         if Message.query.filter_by(id=msg_id).first() is not None:
             return None, 'msg exists'
 
-        cipher = self.get_cipher_from_user(user_to)
+        cipher = self._get_cipher_from_user(user_to)
         encryption = cipher.encrypt(msg_id)
 
         msg = Message(
@@ -128,5 +128,5 @@ class Service:
         return (msg, encryption), None
 
     def chech_msg_encryption(self, msg:Message, user:User, encryption:bytes) -> bool:
-        cipher = self.get_cipher_from_user(user)
+        cipher = self._get_cipher_from_user(user)
         return cipher.decrypt(encryption) == msg.id

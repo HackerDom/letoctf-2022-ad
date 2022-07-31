@@ -10,7 +10,10 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 COPY src/ .
+COPY scripts/ ./scripts
 
-USER mailbox
+RUN mkdir -p /var/data
+RUN chmod +x ./scripts/*
 
-CMD [ "gunicorn", "--bind", "0.0.0.0:3113", "--workers", "4", "--worker-connections", "1024", "main:app"]
+ENTRYPOINT ["./scripts/entrypoint.sh"]
+CMD [ "./scripts/run.sh"]

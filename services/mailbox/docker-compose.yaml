@@ -23,6 +23,8 @@ services:
       - postgres
     ports:
       - "3113:3113"
+    volumes:
+      - .data:/var/data
     ulimits:
       nofile:
         soft: 12000

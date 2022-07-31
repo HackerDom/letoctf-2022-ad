@@ -65,4 +65,4 @@ HASH_TABLE = [
     0x2044b4634e7359f8, 0x1e828a8df1696673, 0x5dc8c9be304726ee, 0x630ef7508f5d1965,
 ]
 SQLALCHEMY_DATABASE_URI = 'postgresql+psycopg2://postgres:postgres@postgres/postgres'
-SECRET_KEY = b'HELLO'
+SECRET_KEY = open('/var/data/secret_key', 'rb').read()
