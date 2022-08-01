@@ -5,7 +5,7 @@ from api import API
 
 
 HOST = '127.0.0.1'
-PORT = 3113
+PORT = 3131
 
 
 def test1():

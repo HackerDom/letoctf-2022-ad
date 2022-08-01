@@ -73,7 +73,7 @@ class Service:
     def user_to_json(self, user:User, is_private:False) -> UserJsonT:
         cipher = self._get_cipher_from_user(user)
         res = {
-            'id': user.id.hex(),
+            'id': b64encode(user.id).decode(),
             'username': b64encode(user.username).decode(),
             'public_key': cipher._public_key.as_dict()
         }

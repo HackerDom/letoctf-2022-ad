@@ -53,6 +53,11 @@ def extract_b64(data:dict, name:str) -> tuple[bytes, str]:
         return None, f'{name} is not in base64'
 
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return ok_response(msg='pong')
+
+
 @app.route('/register', methods=['POST'])
 def register():
     username, error = extract_b64(request.json, 'username')

@@ -24,7 +24,7 @@ services:
     links:
       - postgres
     ports:
-      - "3113:3113"
+      - "3131:3131"
     volumes:
       - .data:/var/data
     ulimits:
