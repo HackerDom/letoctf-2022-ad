@@ -3,7 +3,7 @@
 from typing import Optional
 from os import urandom
 
-from gornilo import NewChecker, CheckRequest, Verdict
+from gornilo import NewChecker, CheckRequest, GetRequest, PutRequest, Verdict
 
 from api import API
 from crypto.hash import Hash
@@ -35,6 +35,10 @@ def generate_user():
     return username, password
 
 
+def generate_dialogue_name():
+    return urandom(8)
+
+
 def ping(api:API) -> Optional[Verdict]:
     ping_rsp, verdict = request_wrapper(api.ping)
     if verdict is not None:
@@ -43,7 +47,7 @@ def ping(api:API) -> Optional[Verdict]:
         return Verdict.MUMBLE('need pong')
 
 
-def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
+def register(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
     register_rsp, verdict = request_wrapper(api.register, RegisterReq(
         username=username, 
         password=password
@@ -53,6 +57,8 @@ def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verd
     if Hash(username).digest() != register_rsp.user_id:
         return Verdict.MUMBLE('wrong user id after registration')
 
+
+def login(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
     login_rsp, verdict = request_wrapper(api.login, LoginReq(
         username=username, 
         password=password
@@ -62,6 +68,8 @@ def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verd
     if Hash(username).digest() != login_rsp.user_id:
         return Verdict.MUMBLE('wrong user id after login')
 
+
+def me(api:API, username:bytes) -> Optional[Verdict]:
     me_rsp, verdict = request_wrapper(api.me)
     if verdict is not None:
         return verdict
@@ -69,6 +77,17 @@ def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verd
         return Verdict.MUMBLE('wrong username')
     if Hash(username).digest() != me_rsp.user_id:
         return Verdict.MUMBLE('wrong user id')
+
+
+def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
+    if verdict := register(api, username, password):
+        return verdict
+
+    if verdict := login(api, username, password):
+        return verdict
+
+    if verdict:= me(api, username):
+        return verdict
 
 
 def get_user_info(api:API, username:bytes) -> Optional[Verdict]:
@@ -150,7 +169,7 @@ def check_service(request:CheckRequest) -> Verdict:
     if verdict := get_user_info(api2, username1):
         return verdict
 
-    dialogue_name = urandom(8)
+    dialogue_name = generate_dialogue_name()
     if verdict := create_dialogue(api1, username2, dialogue_name):
         return verdict
 
@@ -171,6 +190,50 @@ def check_service(request:CheckRequest) -> Verdict:
     if verdict := get_msg(api1, msg_text, msg_encryption):
         return verdict
     if verdict := get_msg(api2, msg_text):
+        return verdict
+
+    return Verdict.OK()
+
+
+@checker.define_put(vuln_num=1, vuln_rate=1)
+def put1(request: PutRequest) -> Verdict:
+    api1 = API(request.hostname, PORT)
+    if verdict := ping(api1):
+        return verdict
+
+    api2 = API(request.hostname, PORT)
+    if verdict := ping(api2):
+        return verdict
+
+    username1, password1 = generate_user()
+    username2, password2 = generate_user()
+
+    if verdict := register_and_login(api1, username1, password1):
+        return verdict
+    if verdict := register_and_login(api2, username2, password2):
+        return verdict
+
+    dialogue_name = request.flag.encode()
+    if verdict := create_dialogue(api1, username2, dialogue_name):
+        return verdict
+
+    flag_id = f'{username1.hex()}:{password1.hex()}:{username2.hex()}:{password2.hex()}'
+    return Verdict.OK(flag_id)
+
+
+@checker.define_get(vuln_num=1)
+def get1(request: GetRequest) -> Verdict:
+    username1, password1, username2, password2 = (bytes.fromhex(x) for x in request.flag_id.split(':'))
+
+    api2 = API(request.hostname, PORT)
+    if verdict := ping(api2):
+        return verdict
+
+    if verdict := login(api2, username2, password2):
+        return verdict
+
+    dialogue_id, verdict = get_dialogue(api2, username1, request.flag.encode())
+    if verdict:
         return verdict
 
     return Verdict.OK()
