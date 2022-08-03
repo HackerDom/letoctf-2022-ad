@@ -55,7 +55,14 @@ echo "Patching number of teams"
 sed -E -i "s/N = [0-9]+/N = ${NUMBER_OF_TEAMS}/" gen/gen_conf_server_prod.py
 sed -E -i "s/N = [0-9]+/N = ${NUMBER_OF_TEAMS}/" gen/gen_conf_client_prod.py
 sed -E -i "s/N = [0-9]+/N = ${NUMBER_OF_TEAMS}/" gen/gen_keys_prod.py
-
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/networkclosed/open_network.sh
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/networkclosed/check_network.sh
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/networkclosed/check_network.sh
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/networkclosed/close_network.sh
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/snat/check_snat_rules.sh 
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/snat/del_snat_rules.sh 
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/snat/add_snat_rules.sh
+sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.${NUMBER_OF_TEAMS}\}/" files/snat/add_snat_rules.sh
 
 echo "Generating VPN configs"
 gen/gen_all_keys.sh
