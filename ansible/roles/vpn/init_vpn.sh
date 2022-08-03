@@ -46,7 +46,7 @@ if ! which ansible-playbook > /dev/null; then
 fi
 
 echo "Patching inventory.cfg"
-sed -E -i "s/vpn\.a ansible_host=\S+/vpn.a ansible_host=$IP/" inventory.cfg
+sed -E -i "s/vpn\.a ansible_host=\S+/vpn.a ansible_host=$IP/" ../../inventory.cfg
 
 echo "Patching gen/gen_conf_client_prod.py"
 sed -E -i "s/SERVER = \"[0-9a-z.-]+\"/SERVER = \"game.${DOMAIN}\"/" gen/gen_conf_client_prod.py

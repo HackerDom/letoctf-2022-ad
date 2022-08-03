@@ -13,4 +13,4 @@ jobs:
     - name: Run ansible
       run: |
         cd ansible
-        ansible-playbook vpn.yaml -i inventory.cfg
+        ansible-playbook vpn.yaml -i inventory.cfg --private-key /home/mikhalych/vpn_private_key
