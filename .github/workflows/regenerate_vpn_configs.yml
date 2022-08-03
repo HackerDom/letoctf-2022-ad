@@ -19,17 +19,12 @@ on:
 jobs:
   regenerate_vpn_configs:
     name: Regenerate VPN configs
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repo
       uses: actions/checkout@v2
-    - name: Install dependencies
-      run: |
-        sudo apt update
-        sudo apt upgrade -y
-        sudo apt install -y openvpn rsync ansible
-    - name: Clean old configs
+    - name: Regenerate keys
       run: |
         cd ansible/roles/vpn
         rm -rf gen/client_prod gen/keys_prod gen/server_prod vpn/files/openvpn_prod
