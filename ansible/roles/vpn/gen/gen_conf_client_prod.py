@@ -3,7 +3,7 @@ import sys
 
 N = 10
 
-SERVER = "game.vpn.cerebralobserver.ru"
+SERVER = "game.62.84.125.140"
 
 CLIENT_DATA = """mode p2p
 dev game
