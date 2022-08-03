@@ -4,12 +4,15 @@ on:
     inputs:
       ip:
         description: "ip"
+        default: '62.84.125.140'
         required: true
       hostname:
         description: 'hostname'
+        default: 'vpn.cerebralobserver.ru'
         required: true
       number_of_teams:
         description: 'number_of_teams'
+        default: '10'
         required: true
 
 
