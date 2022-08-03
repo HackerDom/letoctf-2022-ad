@@ -28,7 +28,12 @@ jobs:
         sudo apt install -y openvpn rsync ansible
     - name: Clean old configs
       run: |
-        cd ansoble/roles/vpn
+        cd ansible/roles/vpn
         rm -rf gen/client_prod gen/keys_prod gen/server_prod vpn/files/openvpn_prod
         ./init_vpn.sh ${{ github.event.inputs.ip }} ${{ github.event.inputs.ip }} ${{ github.event.inputs.number_of_teams }}
         ls -la /vpn/files/openvpn_prod
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        delete-branch: true
+        title: '[WF] new vpn keys'
