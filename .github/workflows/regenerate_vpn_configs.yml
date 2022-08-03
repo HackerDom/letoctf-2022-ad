@@ -1,0 +1,34 @@
+name: Regenerate VPN configs
+on:
+  workflow_dispatch:
+    inputs:
+      ip:
+        description: "ip"
+        required: true
+      hostname:
+        description: 'hostname'
+        required: true
+      number_of_teams:
+        description: 'number_of_teams'
+        required: true
+
+
+jobs:
+  regenerate_vpn_configs:
+    name: Regenerate VPN configs
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run: |
+        apt update
+        apt upgrade -y
+        apt install openvpn rsync ansible
+    - name: Clean old configs
+      run: |
+        cd ansoble/roles/vpn
+        rm -rf gen/client_prod gen/keys_prod gen/server_prod vpn/files/openvpn_prod
+        ./init_vpn.sh ${{ github.event.inputs.ip }} ${{ github.event.inputs.ip }} ${{ github.event.inputs.number_of_teams }}
+        ls -la /vpn/files/openvpn_prod
