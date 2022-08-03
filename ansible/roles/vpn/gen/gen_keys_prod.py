@@ -3,6 +3,7 @@ import sys
 from subprocess import call
 
 N = 10
+OPENVPN_PATH = "/usr/sbin/openvpn"
 
 if __name__ != "__main__":
 	print("I am not a module")
@@ -19,7 +20,7 @@ except FileExistsError:
 
 for i in range(N):
 	keyname = "%d.key" % i
-	call(["openvpn", "--genkey", "secret", keyname])
+	call([OPENVPN_PATH, "--genkey", "--secret", keyname])
 	if not os.path.isfile(keyname):
 		print("Failed to gen: %s" % keyname)
 		break
