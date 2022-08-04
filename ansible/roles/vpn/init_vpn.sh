@@ -67,7 +67,7 @@ sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.$((NUMBER_OF_TEAMS-1))
 echo "Generating VPN configs"
 gen/gen_all_keys.sh
 
-echo "Copying server VPN configs from gen/server_prod/ to vpn/files/openvpn_prod"
-rsync -a gen/server_prod/ vpn/files/openvpn_prod/
+echo "Copying server VPN configs from gen/server_prod/ to files/openvpn_prod"
+rsync -a gen/server_prod/ files/openvpn_prod/
 
 echo "Done"
