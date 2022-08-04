@@ -1,4 +1,4 @@
-name: Regenerate VPN configs
+name: Regenerate Cloud configs
 on:
   workflow_dispatch:
     inputs:
@@ -17,8 +17,8 @@ on:
 
 
 jobs:
-  regenerate_vpn_configs:
-    name: Regenerate VPN configs
+  regenerate_cloud_configs:
+    name: Regenerate Cloud configs
     runs-on: self-hosted
 
     steps:
