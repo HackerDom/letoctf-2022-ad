@@ -12,7 +12,7 @@ import shutil
 DOMAIN = "cloud.cerebralobserver.ru"
 
 # change me before the game
-ROUTER_HOST = "vpn.ructfe.org"
+ROUTER_HOST = "vpn.cerebralobserver.ru"
 
 SSH_OPTS = [
     "-o", "StrictHostKeyChecking=no",
