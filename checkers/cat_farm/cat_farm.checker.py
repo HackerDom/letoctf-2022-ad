@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from gornilo import Checker, PutRequest, GetRequest, CheckRequest, Verdict
 from random import randint
 from api import Api
