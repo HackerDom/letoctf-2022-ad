@@ -12,11 +12,8 @@ services:
     ports:
      - "8888:80"
     volumes:
-      - cats:/app/cats
-      - farms:/app/farms
+      - ./cats:/app/cats
+      - ./farms:/app/farms
 
     restart: always
-          
-volumes:
-    cats:
-    farms:
+

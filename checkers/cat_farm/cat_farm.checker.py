@@ -27,6 +27,16 @@ def check(req: CheckRequest) -> Verdict:
     if cat_id_1 not in res or cat_id_2 not in res:
         return Verdict.MUMBLE("Can't do meow-meow")
 
+    try:
+        farm_id = str(uuid4())
+        api.create_farm(farm_id, generate_flag()[:randint(10, 16)], cat_id_1, cat_id_2)
+        res = api.get_farm(farm_id).split(",")
+
+        if cat_id_1 not in res or cat_id_2 not in res:
+            return Verdict.MUMBLE("U have lost ur cats on ur farm!")
+    except:
+        return Verdict.MUMBLE("bad proto")
+
     return Verdict.OK()
 
 

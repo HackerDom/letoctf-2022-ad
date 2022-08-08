@@ -7,12 +7,10 @@ public class FarmRegistry
 
     public async Task AddFarm(Farm farm)
     {
-        Directory.CreateDirectory(
-            Path.Combine(Constants.FarmsDir, farm.FarmId.ToString()));
         await File.WriteAllTextAsync(
-            Path.Combine(Constants.FarmsDir, farm.FarmId.ToString(), Constants.FarmNameFile), farm.FarmName);
+            Path.Combine(Constants.FarmsDir, $"{farm.FarmId}-{Constants.FarmNameFile}"), farm.FarmName);
         await File.WriteAllTextAsync(
-            Path.Combine(Constants.FarmsDir, farm.FarmId.ToString(), Constants.CatsRegistryName),
+            Path.Combine(Constants.FarmsDir, farm.FarmId.ToString()),
             string.Join(Constants.Separator, farm.Cats.Select(x => x.Genome.ToString())));
     }
 

@@ -31,7 +31,7 @@ class Api:
         return res.text
 
     def create_farm(self, farm_id, farm_name, *cats):
-        res = requests_with_retries().get(f"http://{self.host}:8888/farm/{farm_id}", headers={
+        res = requests_with_retries().post(f"http://{self.host}:8888/farm/{farm_id}", headers={
             "Name": farm_name,
             "Cats": ",".join(cats)
         })

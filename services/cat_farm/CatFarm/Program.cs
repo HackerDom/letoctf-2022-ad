@@ -106,7 +106,7 @@ app.MapPost("/farm/{farmId}", async (HttpContext c, Guid farmId) =>
     else
     {
         var approvedCats = new List<Cat>();
-        foreach (var val in c.Request.Headers["Cats"])
+        foreach (var val in c.Request.Headers["Cats"].First().Split(",", StringSplitOptions.RemoveEmptyEntries))
             if (Guid.TryParse(val, out var catId) && catField.TryGetCat(catId, out var cat))
                 approvedCats.Add(cat);
 
