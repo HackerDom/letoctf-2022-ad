@@ -4,9 +4,10 @@ using CatFarm;
 
 var app = WebApplication.CreateBuilder(args).Build();
 var catField = new CatField();
+var farmsRegistry = new FarmRegistry();
 
-// todo: guid -> str, id is just a genome, but not the key, key is in the fs!
-app.MapGet("/cat/{cat:guid}",async (HttpContext c, Guid cat) =>
+
+app.MapGet("/cat/{cat}",async (HttpContext c, Guid cat) =>
 {
     if (!catField.TryGetCat(cat, out var foundCat))
     {
@@ -20,7 +21,7 @@ app.MapGet("/cat/{cat:guid}",async (HttpContext c, Guid cat) =>
     }
 });
 
-app.MapPost("/cat/{catGenome:guid}", async (HttpContext c, Guid catGenome) =>
+app.MapPost("/cat/{catGenome}", async (HttpContext c, Guid catGenome) =>
 {
     var requiredHeaders = new List<string> { "Name", "x", "y" };
     if (requiredHeaders.Any(x => !c.Request.Headers.ContainsKey(x)))
@@ -37,6 +38,49 @@ app.MapPost("/cat/{catGenome:guid}", async (HttpContext c, Guid catGenome) =>
         };
         
         catField.AddCat(cat);
+    }
+});
+
+app.MapGet("/farm/", async c =>
+{
+    var requiredHeaders = new List<string> { "FarmId" };
+    if (requiredHeaders.Any(x => !c.Request.Headers.ContainsKey(x)))
+    {
+        c.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await c.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("Bad request, fix headers"));
+    }
+    else
+    {
+        await c.Response.Body.WriteAsync(
+            Encoding.UTF8.GetBytes(
+                await farmsRegistry.ObtainFarmCatsInfo(c.Request.Headers["FarmId"]))
+        );
+    }
+});
+
+app.MapPost("/farm/{farmId}", async (HttpContext c, Guid farmId) =>
+{
+    var requiredHeaders = new List<string> { "Cats", "Name" };
+    if (requiredHeaders.Any(x => !c.Request.Headers.ContainsKey(x)))
+    {
+        c.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await c.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("Bad request, fix headers"));
+    }
+    else
+    {
+        var approvedCats = new List<Cat>();
+        foreach (var val in c.Request.Headers["Cats"])
+            if (Guid.TryParse(val, out var catId) && catField.TryGetCat(catId, out var cat))
+                approvedCats.Add(cat);
+
+        var farm = new Farm
+        {
+            FarmId = farmId,
+            FarmName = c.Request.Headers["Name"],
+            Cats = approvedCats.ToArray()
+        };
+        
+        await farmsRegistry.AddFarm(farm);
     }
 });
 

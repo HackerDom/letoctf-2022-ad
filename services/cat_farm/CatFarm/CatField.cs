@@ -7,7 +7,6 @@ namespace CatFarm;
 
 public class CatField
 {
-    private const string CatsDir = "cats";
     private readonly TimeSpan CatLifetime = TimeSpan.FromMinutes(20);
     private readonly ConcurrentDictionary<string, Cat> knownCats = new();
 
@@ -26,7 +25,7 @@ public class CatField
 
     public void Dump()
     {
-        Directory.CreateDirectory(CatsDir);
+        Directory.CreateDirectory(Constants.CatsDir);
         var dumpedCats = knownCats.Select((content, key) =>
         {
             using var sha1 = SHA1.Create();
@@ -34,7 +33,7 @@ public class CatField
                 .Concat(
                     sha1.ComputeHash(Encoding.UTF8.GetBytes(key.ToString()))
                         .Select(x => x.ToString("X2")));
-            var expectingDump = Path.Combine(CatsDir, hashString);
+            var expectingDump = Path.Combine(Constants.CatsDir, hashString);
             try
             {
                 if (!File.Exists(expectingDump))
@@ -46,7 +45,7 @@ public class CatField
             return expectingDump;
         }).ToHashSet();
         
-        foreach (var dump in Directory.EnumerateFiles(CatsDir))
+        foreach (var dump in Directory.EnumerateFiles(Constants.CatsDir))
         {
             if (!dumpedCats.Contains(dump))
             {
@@ -61,7 +60,7 @@ public class CatField
 
     private async Task WarmUp()
     {
-        await Parallel.ForEachAsync(Directory.EnumerateFiles(CatsDir), async (catFile, ct) =>
+        await Parallel.ForEachAsync(Directory.EnumerateFiles(Constants.CatsDir), async (catFile, ct) =>
         {
             try
             {
