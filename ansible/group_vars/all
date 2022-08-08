@@ -40,7 +40,7 @@ cs_flags_secret: ohKai2eepi
 cs_round_length: 35
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
-cs_time: "['2022-08-05 16:15:00', '2022-08-05 23:59:59']"
+cs_time: "['2022-08-08 00:00:00', '2022-08-08 23:59:59']"
 
 cs_checkers_hostname_cb: |
   sub { my ($team, $service) = @_; $team->{host} }
