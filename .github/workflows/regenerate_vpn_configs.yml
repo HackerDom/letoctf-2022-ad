@@ -1,0 +1,37 @@
+name: Regenerate VPN configs
+on:
+  workflow_dispatch:
+    inputs:
+      ip:
+        description: "ip"
+        default: '62.84.125.140'
+        required: true
+      hostname:
+        description: 'hostname'
+        default: 'vpn.cerebralobserver.ru'
+        required: true
+      number_of_teams:
+        description: 'number_of_teams'
+        default: '10'
+        required: true
+
+
+jobs:
+  regenerate_vpn_configs:
+    name: Regenerate VPN configs
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Regenerate keys
+      run: |
+        cd ansible/roles/vpn
+        rm -rf gen/client_prod gen/keys_prod gen/server_prod files/openvpn_prod
+        mkdir -p vpn/files/openvpn_prod
+        ./init_vpn.sh ${{ github.event.inputs.ip }} ${{ github.event.inputs.hostname }} ${{ github.event.inputs.number_of_teams }}
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        delete-branch: true
+        title: '[WF] new vpn keys'

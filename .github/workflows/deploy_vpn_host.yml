@@ -1,0 +1,16 @@
+name: Deploy VPN host
+on:
+  workflow_dispatch: {}
+
+jobs:
+  rebuild_image:
+    name: Deploy VPN host
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run ansible
+      run: |
+        cd ansible
+        ansible-playbook vpn.yaml -i inventory.cfg --private-key /home/mikhalych/vpn_private_key
