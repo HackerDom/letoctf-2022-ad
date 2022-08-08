@@ -6,7 +6,7 @@ services:
       - postgres
     restart: "always"
     ports:
-      - "127.0.0.1:1337:1337"
+      - "1337:1337"
 
   postgres:
     image: postgres:13.2-alpine
