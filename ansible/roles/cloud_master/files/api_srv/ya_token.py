@@ -1,7 +1,7 @@
-FOLDER_ID = "b1g4ksjfc5ictvq2082o"
+FOLDER_ID = "b1gvi30ua5c64ak404r3"
 
-SERVICE_ACCOUNT_ID = "aje4oih20lirk8g3uv7c"
-KEY_ID = "ajent885scqg0i0emrr8"
+SERVICE_ACCOUNT_ID = "aje4q1l97qqin63mv8ui"
+KEY_ID = "ajej7vq697abikhed3jj"
 
 ZONE_ID = "ru-central1-a"
 

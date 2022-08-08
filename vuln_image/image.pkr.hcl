@@ -3,7 +3,7 @@ variable "api_token" {
 }
 
 source "yandex" "vuln_image" {
-  folder_id = "b1g4ksjfc5ictvq2082o"
+  folder_id = "b1gvi30ua5c64ak404r3"
   zone = "ru-central1-a"
   token = var.api_token
   image_family = "ctf-images"
