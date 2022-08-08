@@ -9,7 +9,6 @@ namespace CatFarm;
 public record Cat
 {
     public Guid Genome { get; init; } = Guid.NewGuid();
-    
     public long KnownX { get; init; }
     public long KnownY { get; init; }
     
