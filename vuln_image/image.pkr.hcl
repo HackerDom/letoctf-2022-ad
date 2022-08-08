@@ -56,6 +56,7 @@ build {
 
       # Add users for services
       "useradd -m -s /bin/bash minebank",
+      "useradd -m -s /bin/bash cat_farm",
     ]
   }
 
@@ -70,6 +71,10 @@ build {
     source = "../services/minebank/"
     destination = "/home/minebank/"
   }
+  provisioner "file" {
+    source = "../services/cat_farm/"
+    destination = "/home/cat_farm/"
+  }
 
   # Build and run services for the first time
   provisioner "shell" {
@@ -81,8 +86,17 @@ build {
       "systemctl enable ctf-service@minebank",
     ]
   }
+  provisioner "shell" {
+    inline = [
+      "cd ~cat_farm",
+      "docker-compose build",
 
-  # Fix some internal digitalocean+cloud-init scripts to be compatible with our cloud infrastructure
+      "systemctl daemon-reload",
+      "systemctl enable ctf-service@cat_farm",
+    ]
+  }
+
+  # Fix some internal yandexcloud-init scripts to be compatible with our cloud infrastructure
   provisioner "shell" {
     script = "yandex_cloud_specific_setup.sh"
   }
