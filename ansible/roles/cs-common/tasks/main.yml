@@ -34,7 +34,7 @@
   tags: update
 
 - name: repo
-  git: repo=https://github.com/HackerDom/checksystem.git dest={{ cs_dir }} version=5b013c5d292e3439d3e7625ede5a74bdb3e1f352
+  git: repo=https://github.com/HackerDom/checksystem.git dest={{ cs_dir }} version=63399fd6632789823d535f795a870001fa1a06aa
   become: yes
   become_user: "{{ cs_user }}"
   tags: update

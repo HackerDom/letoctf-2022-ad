@@ -3,7 +3,7 @@ variable "api_token" {
 }
 
 source "yandex" "vuln_image" {
-  folder_id = "b1g4ksjfc5ictvq2082o"
+  folder_id = "b1gvi30ua5c64ak404r3"
   zone = "ru-central1-a"
   token = var.api_token
   image_family = "ctf-images"
@@ -55,7 +55,7 @@ build {
       "apt-get install -y -q haveged",
 
       # Add users for services
-      "useradd -m -s /bin/bash mailbox",
+      "useradd -m -s /bin/bash minebank",
     ]
   }
 
@@ -67,18 +67,18 @@ build {
 
   # Copy services
   provisioner "file" {
-    source = "../services/mailbox/"
-    destination = "/home/mailbox/"
+    source = "../services/minebank/"
+    destination = "/home/minebank/"
   }
 
   # Build and run services for the first time
   provisioner "shell" {
     inline = [
-      "cd ~mailbox",
+      "cd ~minebank",
       "docker-compose build",
 
       "systemctl daemon-reload",
-      "systemctl enable ctf-service@mailbox",
+      "systemctl enable ctf-service@minebank",
     ]
   }
 
