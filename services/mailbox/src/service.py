@@ -75,9 +75,9 @@ class Service:
         res = {
             'id': b64encode(user.id).decode(),
             'username': b64encode(user.username).decode(),
-            'public_key': cipher._public_key.as_dict()
         }
         if is_private:
+            res['public_key'] = cipher._public_key.as_dict()
             res['private_key'] = cipher._private_key.as_dict()
         return res
 

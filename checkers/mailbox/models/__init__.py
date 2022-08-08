@@ -1,4 +1,4 @@
-from models.default_rsp import DefaultRsp  # noqa
+from models.default_rsp import DefaultRsp, ErrorRsp  # noqa
 from models.ping import PingRsp  # noqa
 from models.register import RegisterReq, RegisterRsp  # noqa
 from models.login import LoginReq, LoginRsp  # noqa

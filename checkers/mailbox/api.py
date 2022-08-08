@@ -13,11 +13,19 @@ class API:
         self._addr = f'http://{host}:{port}'
         self._session = requests_with_retries()
 
+    def _build_error_rsp(self, rsp):
+        if rsp.get('status') == 'error':
+            return ErrorRsp(
+                status=rsp['status'],
+                msg=rsp['msg']
+            )
+        return None
+
     def ping(self):
         rsp = self._session.get(
             f'{self._addr}/ping'
         ).json()
-        return PingRsp(
+        return self._build_error_rsp(rsp) or PingRsp(
             status=rsp['status'],
             msg=rsp['response']['msg']
         )
@@ -30,7 +38,7 @@ class API:
                 'password': b64encode(req.password).decode()
             }
         ).json()
-        return RegisterRsp(
+        return self._build_error_rsp(rsp) or RegisterRsp(
             status=rsp['status'],
             user_id=b64decode(rsp['response']['user_id'].encode())
         )
@@ -43,7 +51,7 @@ class API:
                 'password': b64encode(req.password).decode()
             }
         ).json()
-        return LoginRsp(
+        return self._build_error_rsp(rsp) or LoginRsp(
             status=rsp['status'],
             user_id=b64decode(rsp['response']['user_id'])
         )
@@ -52,13 +60,12 @@ class API:
         rsp = self._session.get(
             f'{self._addr}/me'
         ).json()
-        user = rsp['response']['user']
-        return MeRsp(
+        return self._build_error_rsp(rsp) or MeRsp(
             status=rsp['status'],
-            user_id=b64decode(user['id'].encode()),
-            username=b64decode(user['username'].encode()),
-            private_key=PrivateKey(user['private_key']['p'], user['private_key']['q']),
-            public_key=PublicKey(user['public_key']['n'])
+            user_id=b64decode(rsp['response']['user']['id'].encode()),
+            username=b64decode(rsp['response']['user']['username'].encode()),
+            private_key=PrivateKey(rsp['response']['user']['private_key']['p'], rsp['response']['user']['private_key']['q']),
+            public_key=PublicKey(rsp['response']['user']['public_key']['n'])
         )
 
     def get_user_info(self, req: GetUserInfoReq) -> GetUserInfoRsp:
@@ -68,12 +75,10 @@ class API:
                 'username': b64encode(req.username).decode()
             }
         ).json()
-        user = rsp['response']['user']
-        return GetUserInfoRsp(
+        return self._build_error_rsp(rsp) or GetUserInfoRsp(
             status=rsp['status'],
-            user_id=b64decode(user['id'].encode()),
-            username=b64decode(user['username'].encode()),
-            public_key=PublicKey(user['public_key']['n'])
+            user_id=b64decode(rsp['response']['user']['id'].encode()),
+            username=b64decode(rsp['response']['user']['username'].encode())
         )
 
     def create_dialogue(self, req:CreateDialogueReq) -> CreateDialogueRsp:
@@ -84,7 +89,7 @@ class API:
                 'name': b64encode(req.name).decode()
             }
         ).json()
-        return CreateDialogueRsp(
+        return self._build_error_rsp(rsp) or CreateDialogueRsp(
             status=rsp['status'],
             id=b64decode(rsp['response']['dialogue']['id'].encode()),
             name=b64decode(rsp['response']['dialogue']['name'].encode())
@@ -97,7 +102,7 @@ class API:
                 'username': b64encode(req.username).decode()
             }
         ).json()
-        return CreateDialogueRsp(
+        return self._build_error_rsp(rsp) or CreateDialogueRsp(
             status=rsp['status'],
             id=b64decode(rsp['response']['dialogue']['id'].encode()),
             name=b64decode(rsp['response']['dialogue']['name'].encode())
@@ -111,7 +116,7 @@ class API:
                 'text': b64encode(req.text).decode()
             }
         ).json()
-        return SendMsgRsp(
+        return self._build_error_rsp(rsp) or SendMsgRsp(
             status=rsp['status'],
             id=b64decode(rsp['response']['msg']['id'].encode()),
             encryption=b64decode(rsp['response']['msg']['encryption'].encode()),
@@ -130,7 +135,7 @@ class API:
             f'{self._addr}/get_msg',
             params=data
         ).json()
-        return GetMsgRsp(
+        return self._build_error_rsp(rsp) or GetMsgRsp(
             status=rsp['status'],
             id=b64decode(rsp['response']['msg']['id'].encode()),
             text=b64decode(rsp['response']['msg']['text'].encode())

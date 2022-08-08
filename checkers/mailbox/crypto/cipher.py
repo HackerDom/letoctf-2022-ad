@@ -11,11 +11,6 @@ class Cipher:
         self._public_key = public_key
         self._private_key = private_key
 
-    @staticmethod
-    def init(private_key:PrivateKey):
-        public_key = PublicKey.from_private_key(private_key)
-        return Cipher(private_key, public_key)
-
     def _l(self, u:int) -> int:
         return (u - 1) // self._n
 

@@ -13,4 +13,3 @@ class GetUserInfoReq:
 class GetUserInfoRsp(DefaultRsp):
     user_id: bytes
     username: bytes
-    public_key: PublicKey
