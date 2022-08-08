@@ -9,6 +9,7 @@ namespace CatFarm;
 public record Cat
 {
     public Guid Genome { get; init; } = Guid.NewGuid();
+    public DateTimeOffset CreationDate { get; } = DateTimeOffset.UtcNow;
     public string Name { get; init; }
 
     public byte[] GetImage()
@@ -53,7 +54,6 @@ public record Cat
         
         img.Mutate(x =>
             x
-            //.Fill(genomeColor, rect)
             .Fill(earColor, rightEar)
             .Fill(earColor, leftEar)
             .Fill(headColor, head)
