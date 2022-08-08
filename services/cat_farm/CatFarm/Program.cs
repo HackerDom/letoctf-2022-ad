@@ -1,11 +1,15 @@
 using System.Text;
 using CatFarm;
 
-
 var app = WebApplication.CreateBuilder(args).Build();
 var catField = new CatField();
 var farmsRegistry = new FarmRegistry();
 
+app.MapGet("/", async (c) =>
+{
+    c.Response.ContentType = "text/html";
+    
+});
 
 app.MapGet("/cat/{cat}",async (HttpContext c, Guid cat) =>
 {
@@ -31,13 +35,46 @@ app.MapPost("/cat/{catGenome}", async (HttpContext c, Guid catGenome) =>
     }
     else
     {
-        var cat = new Cat
+        if (!long.TryParse(c.Request.Headers["x"], out var x) || !long.TryParse(c.Request.Headers["y"], out var y))
         {
-            Genome = catGenome,
-            Name = c.Request.Headers["Name"]
-        };
+            c.Response.StatusCode = StatusCodes.Status400BadRequest;
+            await c.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("Bad request, fix ur longs!"));
+        }
+        else
+        {
+            var cat = new Cat
+            {
+                Genome = catGenome,
+                Name = c.Request.Headers["Name"],
+                KnownX = x,
+                KnownY = y
+            };
         
-        catField.AddCat(cat);
+            catField.AddCat(cat);   
+        }
+    }
+});
+
+app.MapGet("/meow-meow", async c =>
+{
+    if (!long.TryParse(c.Request.Headers["x"], out var x) || !long.TryParse(c.Request.Headers["y"], out var y))
+    {
+        c.Response.StatusCode = StatusCodes.Status400BadRequest;
+        await c.Response.Body.WriteAsync(Encoding.UTF8.GetBytes("Bad request, fix ur longs!"));
+    }
+    else
+    {
+        var foundCats = await catField.MeowMeow(x, y);
+        if (foundCats.Count > 0)
+        {
+            await c.Response.Body.WriteAsync(
+                Encoding.UTF8.GetBytes(
+                    string.Join(",", foundCats.Select(x => x.ToString()))));
+        }
+        else
+        {
+            c.Response.StatusCode = StatusCodes.Status404NotFound;
+        }
     }
 });
 
@@ -83,7 +120,5 @@ app.MapPost("/farm/{farmId}", async (HttpContext c, Guid farmId) =>
         await farmsRegistry.AddFarm(farm);
     }
 });
-
-// add meow-meow method 
 
 app.Run();
