@@ -18,11 +18,11 @@ PORT = 3131
 checker = NewChecker()
 
 
-def generate_random_string(length:int) -> bytes():
+def generate_random_string(length:int):
     return ''.join(choice(ALPHA) for _ in range(length)).encode()
 
 
-def request_wrapper(request, *args) -> tuple[Optional[DefaultRsp], Optional[Verdict]]:
+def request_wrapper(request, *args):
     try:
         rsp = request(*args)
     except Exception as ex:
@@ -47,7 +47,7 @@ def generate_dialogue_name():
     return generate_random_string(12)
 
 
-def ping(api:API) -> Optional[Verdict]:
+def ping(api:API):
     ping_rsp, verdict = request_wrapper(api.ping)
     if verdict is not None:
         return verdict
@@ -55,7 +55,7 @@ def ping(api:API) -> Optional[Verdict]:
         return Verdict.MUMBLE('need pong')
 
 
-def register(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
+def register(api:API, username:bytes, password:bytes):
     register_rsp, verdict = request_wrapper(api.register, RegisterReq(
         username=username, 
         password=password
@@ -66,7 +66,7 @@ def register(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
         return Verdict.MUMBLE('wrong user id after registration')
 
 
-def login(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
+def login(api:API, username:bytes, password:bytes):
     login_rsp, verdict = request_wrapper(api.login, LoginReq(
         username=username, 
         password=password
@@ -77,7 +77,7 @@ def login(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
         return Verdict.MUMBLE('wrong user id after login')
 
 
-def me(api:API, username:bytes) -> tuple[Optional[MeRsp], Optional[Verdict]]:
+def me(api:API, username:bytes):
     me_rsp, verdict = request_wrapper(api.me)
     if verdict is not None:
         return None, verdict
@@ -88,7 +88,7 @@ def me(api:API, username:bytes) -> tuple[Optional[MeRsp], Optional[Verdict]]:
     return me_rsp, None
 
 
-def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verdict]:
+def register_and_login(api:API, username:bytes, password:bytes):
     if verdict := register(api, username, password):
         return verdict
 
@@ -96,7 +96,7 @@ def register_and_login(api:API, username:bytes, password:bytes) -> Optional[Verd
         return verdict
 
 
-def get_user_info(api:API, username:bytes) -> Optional[Verdict]:
+def get_user_info(api:API, username:bytes):
     get_user_info_rsp, verdict = request_wrapper(api.get_user_info, GetUserInfoReq(
         username=username
     ))
@@ -108,7 +108,7 @@ def get_user_info(api:API, username:bytes) -> Optional[Verdict]:
         return Verdict.MUMBLE('wrong user id')
 
 
-def create_dialogue(api:API, username:bytes, dialogue_name:bytes) -> tuple[bytes, Optional[Verdict]]:
+def create_dialogue(api:API, username:bytes, dialogue_name:bytes):
     create_dialogue_rsp, verdict = request_wrapper(api.create_dialogue, CreateDialogueReq(
         username=username,
         name=dialogue_name
@@ -120,7 +120,7 @@ def create_dialogue(api:API, username:bytes, dialogue_name:bytes) -> tuple[bytes
     return create_dialogue_rsp.id, None
 
 
-def get_dialogue(api:API, username:bytes, dialogue_name:bytes) -> tuple[bytes, Optional[Verdict]]:
+def get_dialogue(api:API, username:bytes, dialogue_name:bytes):
     get_dialogue_req, verdict = request_wrapper(api.get_dialogue, GetDialogueReq(
         username=username
     ))
@@ -131,7 +131,7 @@ def get_dialogue(api:API, username:bytes, dialogue_name:bytes) -> tuple[bytes, O
     return get_dialogue_req.id, None
 
 
-def send_msg(api:API, dialogue_id:bytes, msg_text:bytes) -> tuple[Optional[tuple[bytes, bytes]], Optional[Verdict]]:
+def send_msg(api:API, dialogue_id:bytes, msg_text:bytes):
     send_msg_rsp, verdict = request_wrapper(api.send_msg, SendMsgReq(
         dialogue_id=dialogue_id,
         text=msg_text
@@ -141,7 +141,7 @@ def send_msg(api:API, dialogue_id:bytes, msg_text:bytes) -> tuple[Optional[tuple
     return (send_msg_rsp.id, send_msg_rsp.encryption), None
 
 
-def get_msg(api:API, msg:bytes, msg_encryption:bytes=None) -> Optional[Verdict]:
+def get_msg(api:API, msg:bytes, msg_encryption:bytes=None):
     msg_id = Hash(msg).digest()
     get_msg_rsp, verdict = request_wrapper(api.get_msg, GetMsgReq(
         msg_id=msg_id,
@@ -154,7 +154,7 @@ def get_msg(api:API, msg:bytes, msg_encryption:bytes=None) -> Optional[Verdict]:
 
 
 @checker.define_check
-def check_service(request:CheckRequest) -> Verdict:
+def check_service(request:CheckRequest):
     api1 = API(request.hostname, PORT)
     if verdict := ping(api1):
         return verdict
@@ -248,7 +248,7 @@ class DialogueChecker(VulnChecker):
 
 
     @staticmethod
-    def get(request: GetRequest) -> Verdict:
+    def get(request: GetRequest):
         username1, password1, username2, password2 = (bytes.fromhex(x) for x in request.flag_id.split(':'))
 
         api2 = API(request.hostname, PORT)
@@ -268,7 +268,7 @@ class DialogueChecker(VulnChecker):
 @checker.define_vuln(flag_id_description='flag_id is message id (hex)')
 class MessageChecker(VulnChecker):
     @staticmethod
-    def put(request: PutRequest) -> Verdict:
+    def put(request: PutRequest):
         api1 = API(request.hostname, PORT)
         if verdict := ping(api1):
             return verdict
@@ -311,7 +311,7 @@ class MessageChecker(VulnChecker):
         return Verdict.OK_WITH_FLAG_ID(msg_id.hex(), flag_id)
 
     @staticmethod
-    def get(request: GetRequest) -> Verdict:
+    def get(request: GetRequest):
         username1, password1, username2, password2, dialogue_id, msg_id, msg_encryption = (bytes.fromhex(x) for x in request.flag_id.split(':'))
         api1 = API(request.hostname, PORT)
         if verdict := ping(api1):
