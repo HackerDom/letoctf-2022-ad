@@ -40,7 +40,7 @@ cs_flags_secret: ohKai2eepi
 cs_round_length: 30
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
-cs_time: "['2022-08-09 11:00:00', '2022-08-09 13:59:59']"
+cs_time: "['2022-08-09 12:00:00', '2022-08-09 14:29:59']"
 
 cs_scoring: |
     start_flag_price => 10,
@@ -71,7 +71,7 @@ teams: |
   {name => 'Queen Cake',   network => '10.60.14.0/24', host => '10.60.14.4', logo => 'https://checksystem.ad.leto-hackerdom.ru/Queen_Cake.jpeg', token => 'CLOUD_14_b67473b688a604709a006ea1a539a616', country => 'Russia'},
   {name => 'Froyo',        network => '10.60.15.0/24', host => '10.60.15.4', logo => 'https://checksystem.ad.leto-hackerdom.ru/Froyo.png', token => 'CLOUD_15_9f83e398b95d4ebb9214c957b189aa08', country => 'Russia'},
   {name => 'Marshmellow',  network => '10.60.16.0/24', host => '10.60.16.4', logo => 'https://checksystem.ad.leto-hackerdom.ru/Marshmallow.jpeg', token => 'CLOUD_16_f27dfb107cfe0f03d051a243601ed7c5', country => 'Russia'},
-  {name => 'kitKat',       network => '10.60.17.0/24', host => '10.60.17.4', logo => 'http://example.com', token => 'CLOUD_17_83c13ccf9e6268d8d70ba07057b7ff46', country => 'Russia'},
+  {name => 'kitKat',       network => '10.60.17.0/24', host => '10.60.17.4', logo => 'https://checksystem.ad.leto-hackerdom.ru/kitKat.jpeg', token => 'CLOUD_17_83c13ccf9e6268d8d70ba07057b7ff46', country => 'Russia'},
 
 services: |
   {name => 'minebank', path => 'checkers/minebank/minebank.checker.py', timeout => 30, tcp_port => 1337},
