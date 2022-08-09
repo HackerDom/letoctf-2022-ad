@@ -1,0 +1,150 @@
+<html lang="en">
+    <head>
+        <title>Cat Farm</title>
+        <style>
+            body{
+                background-color: black;
+            }
+            
+            .logo{
+                display: block;
+                margin: 30px auto;
+                width: 50%;
+            }
+            
+            .logo_img{
+                max-width: 100%;
+            }
+    
+            .container {
+                height: 70px;
+                position: relative;
+                #border: 3px solid green;
+            }
+    
+            .btn-center {
+                margin: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+            }
+    
+            .meow-button {
+                background-color: #BB4493;
+                border: none;
+                color: #85BDC0;
+                padding: 15px 32px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 14px;
+            }
+            
+            .input-field {
+                background-color: #7C75AD;
+                border: 2px solid #AD4C90;
+                color: #85BDC0;
+                padding: 5px 5px;
+                margin: 8px;
+                max-width: 50%;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 20px;
+            }
+            
+            .response {
+                color: #AD4C90;
+                font-family: Arial,serif;
+                font-size: 16px;
+            }
+            
+            .imgs {
+                image-rendering: pixelated;
+                image-rendering: -moz-crisp-edges;
+                image-rendering: crisp-edges;
+                width: 100px;
+                margin: 8px;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class="logo">
+            <img class="logo_img" src="logo.png">
+        </div>
+
+        <div class="container"></div>
+        <div class="container"></div>
+            
+        <div class="container">
+            <div class="btn-center">
+                <input class="input-field" type="text" value="x" id="catX" size="4">
+                <input class="input-field" type="text" value="y" id="catY" size="4">
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="btn-center">
+                <button onclick="meow()" class="meow-button">Meow-Meow</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="btn-center">
+                <p class="response" id="response">Waiting for ur meow-meows!</p>
+            </div>
+        </div>
+    
+        <div class="container">
+            <div class="btn-center" id="cats">
+            </div>
+        </div>
+    </body>
+
+    <script>
+        function uuidv4() {
+            return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+                (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            );
+        }
+        
+        function meow (){
+            let x = document.getElementById('catX').value
+            let y = document.getElementById('catY').value
+            
+            if (!Number.isSafeInteger(parseInt(x))) {
+                x = "0"
+            }
+            
+            if (!Number.isSafeInteger(parseInt(y))) {
+                y = "0"
+            }
+            
+            fetch("/meow-meow", {
+                headers: new Headers({"x": x, "y": y})
+            }).then((response) => {
+                if (!response.ok){
+                    document.getElementById('response').innerText = "No cats found? Just dont cry! I've created a new cat here for you!"
+                    fetch("/cat/" + uuidv4(), {
+                        method: "POST",
+                        headers: new Headers({"x": x, "y": y, "Name": "Not alone!"}),
+                    })
+                } else {
+                    response.text().then(x => {
+                        document.getElementById('response').innerText = "Cats found!"
+                        let container = document.getElementById('cats');
+                        container.innerHTML = "";
+                        x.split(",").forEach(x =>
+                        {
+                            let tag = "<img class=\"imgs\" src=\"/cat/" + x.trim() + "\">";
+                            container.insertAdjacentHTML('beforeend', tag);
+                        });
+                    })
+                }
+            })
+        }
+    </script>
+</html>

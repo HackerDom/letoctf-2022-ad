@@ -1,0 +1,36 @@
+name: Regenerate Cloud configs
+on:
+  workflow_dispatch:
+    inputs:
+      ip:
+        description: "ip"
+        default: '51.250.7.210'
+        required: true
+      hostname:
+        description: 'hostname'
+        default: 'cloud.ad.leto-hackerdom.ru'
+        required: true
+      number_of_teams:
+        description: 'number_of_teams'
+        default: '30'
+        required: true
+
+
+jobs:
+  regenerate_cloud_configs:
+    name: Regenerate Cloud configs
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Regenerate keys
+      run: |
+        cd ansible/roles/cloud_master
+        rm -rf gen/client_entergame_prod gen/db_prod gen/net_certs_prod gen/openvpn_team_main_net_client_prod gen/passwds_prod gen/server_outside_prod gen/tokens_hashed_prod gen/tokens_prod files/api_srv/db_init_state_prod
+        ./init_cloud.sh ${{ github.event.inputs.ip }} ${{ github.event.inputs.hostname }} ${{ github.event.inputs.number_of_teams }}
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v4
+      with:
+        delete-branch: true
+        title: '[WF] new cloud configs'

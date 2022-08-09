@@ -1,0 +1,172 @@
+@font-face {
+    font-family: Minecraft;
+    src: url(assets/fonts/minecraft.ttf);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    color: white;
+    text-shadow: 2px 2px 3px black;
+    font-family: Minecraft, sans-serif;
+    background-blend-mode: multiply;
+    background: #bcbcbc url('assets/img/bg.png') no-repeat;
+    position: relative;
+}
+
+.wrapper {
+    width: 100%;
+    margin: 0px auto;
+    position: relative;
+}
+
+header {
+    position: relative;
+    font-size: 25px;
+    padding: 2% 3%;
+    background: rgba(188, 188, 188, 60%)
+}
+
+header ul.nav  {
+    float: right;
+    list-style: none;
+}
+
+header ul.nav li {
+    display: inline;
+    margin-left: 25px;
+}
+
+.navlink,
+header a {
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity,text-decoration 500ms ease;
+}
+
+.navlink:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+}
+
+main {
+    background: rgba(188, 188, 188, 60%);
+    margin: 7% auto auto;
+    width: 50%;
+    padding: 3% 4%;
+}
+
+.logo-icon {
+    transform: translateY(+3px);
+}
+
+main .componentContainer .loginForm {
+    width: 50%;
+    margin: auto;
+}
+
+form .input-container {
+    padding: 1% 0;
+}
+
+.btn, .text-input {
+    background-color: rgba(0, 0, 0, 0);
+    border: 1px solid #fff;
+    box-shadow: 2px 2px 3px black;
+    color: #FFF;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 5% 0;
+    padding: 2%;
+    font-family: Minecraft, sans-serif;
+    text-shadow: 2px 2px 3px black;
+}
+
+.btn {
+    cursor: pointer;
+    text-align: center;
+}
+
+.text-input:focus, .text-input:hover,
+.text-input:focus, .btn:hover {
+    outline: none ! important;
+    transition: transform 500ms ease;
+    transform: scale(1.1);
+}
+
+.errmsg {
+    margin: 4% 0;
+}
+
+.profile .account .infoLine {
+    margin: 5% 0;
+}
+
+.profile .account .data {
+    float: right;
+}
+
+.new-transaction .transaction-form .input-container .text-input {
+    margin: 1% 0;
+}
+
+.transactionsTypes .transactionsType {
+    display: inline-block;
+    width: 50%;
+    text-align: center;
+    margin: 3% 0;
+}
+
+.transactionsTypes .btn:hover {
+    transform: none;
+}
+
+.transactionsTypes .btn:active {
+    transform: scale(1.05);
+}
+
+.transactionsTypes .navlink:hover {
+    text-decoration-thickness: 2px
+}
+
+table {
+    width: 100%;
+    display: table;
+    text-align: center;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+th {
+    display: table-header-group;
+}
+
+td {
+    white-space: inherit;
+    overflow: inherit;
+    padding: 1%;
+    display: table-cell;
+}
+
+tr {
+    white-space: nowrap;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+tr:active {
+    background-color: rgba(188, 188, 188, 80%);
+}
+
+tr:hover {
+    word-break: break-all;
+    white-space: unset;
+    overflow: visible;
+}
+
+

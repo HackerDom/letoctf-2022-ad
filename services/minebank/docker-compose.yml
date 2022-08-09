@@ -1,0 +1,22 @@
+version: '2.4'
+services:
+  minebank:
+    build: .
+    depends_on:
+      - postgres
+    restart: "always"
+    ports:
+      - "1337:1337"
+
+  postgres:
+    image: postgres:13.2-alpine
+    restart: always
+    mem_limit: 1G
+    memswap_limit: 1G
+    pids_limit: 100
+    volumes:
+      - ./data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=minebank
+      - POSTGRES_USER=minebank
+      - POSTGRES_DB=minebank
