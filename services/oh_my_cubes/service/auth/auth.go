@@ -1,22 +1,21 @@
-package services
+package auth
 
 import (
 	"context"
 	"errors"
 	"go.uber.org/zap"
-	"summer-2022/auth"
 	"summer-2022/models"
 	"summer-2022/proto"
 )
 
 type AuthService struct {
 	proto.UnimplementedAuthServer
-	userStorage auth.CredentialsStorage
-	jwt         auth.JWTManager
+	userStorage CredentialsStorage
+	jwt         JWTManager
 	lg          *zap.Logger
 }
 
-func NewAuthService(userStorage auth.CredentialsStorage, jwt auth.JWTManager, lg *zap.Logger) proto.AuthServer {
+func NewAuthService(userStorage CredentialsStorage, jwt JWTManager, lg *zap.Logger) proto.AuthServer {
 	return &AuthService{
 		userStorage: userStorage,
 		jwt:         jwt,

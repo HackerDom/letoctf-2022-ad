@@ -6,16 +6,14 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"summer-2022/auth"
-	"summer-2022/etcd"
 	"summer-2022/proto"
-	"summer-2022/services"
 )
 
 func main() {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
 
-	etcdStorage := etcd.NewEtcdStorage("localhost:2379", logger)
+	etcdStorage := NewEtcdStorage("localhost:2379", logger)
 
 	credsStorage := auth.NewEtcdCredentialsStorage(etcdStorage, logger)
 	jwtManager := auth.NewJWTManagerImpl([]byte("secret"), logger)
@@ -27,11 +25,11 @@ func main() {
 		grpc.UnaryInterceptor(authMiddleware.Intercept),
 	}
 	omcServer := grpc.NewServer(opts...)
-	omcApi := services.NewGameService(logger)
+	omcApi := NewGameService(logger)
 
 	//auth
 	authServer := grpc.NewServer()
-	authService := services.NewAuthService(credsStorage, jwtManager, logger)
+	authService := auth.NewAuthService(credsStorage, jwtManager, logger)
 
 	host := "localhost"
 

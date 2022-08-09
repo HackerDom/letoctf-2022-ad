@@ -6,10 +6,6 @@ package proto_omc;
 service OMC {
   rpc AddBlock(Block) returns (Empty){}
   rpc GetBlocks(BlockId) returns (Block){}
-  rpc CreateRealm(Realm) returns (Empty) {}
-  rpc GetRealms(RealmId) returns (stream Realm) {}
-  rpc GetState(Empty) returns (State) {}
-  rpc SendAction(Action) returns (State) {}
 }
 
 message BlockId{
@@ -21,32 +17,5 @@ message Block{
   string Description = 2;
 }
 
-message RealmId{
-  string Id = 1;
-}
-
-message Realm{
-  RealmId Id = 1;
-  string AdminKey = 2;
-}
-
-message Action{
-  uint32 Type = 1;
-  map<string, string> Arguments = 2;
-}
-
 message Empty{}
 
-message State {
-  CharacterInfo Character = 1;
-  uint64 Width = 2;
-  repeated bytes Tiles = 3;
-}
-
-message Row {
-  repeated bytes Tiles = 1;
-}
-
-message CharacterInfo {
-  uint32 Health = 1;
-}

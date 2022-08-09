@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"go.uber.org/zap"
 	"summer-2022/auth"
-	"summer-2022/etcd"
 	"summer-2022/proto"
 )
 
@@ -21,12 +20,12 @@ list
 */
 
 type EtcdGameStorageStorage struct {
-	storage    etcd.EtcdStorage
+	storage    EtcdStorage
 	jwtManager auth.JWTManager
 	lg         *zap.Logger
 }
 
-func NewEtcdGameStorage(etcdStorage etcd.EtcdStorage, lg *zap.Logger) *EtcdGameStorageStorage {
+func NewEtcdGameStorage(etcdStorage EtcdStorage, lg *zap.Logger) *EtcdGameStorageStorage {
 	return &EtcdGameStorageStorage{
 		storage: etcdStorage,
 		lg:      lg,
@@ -39,7 +38,7 @@ func (st *EtcdGameStorageStorage) AddBlock(ctx context.Context, block *proto.Blo
 		return err
 	}
 
-	marshal, err := etcd.Marshal[*proto.Block](block)
+	marshal, err := Marshal[*proto.Block](block)
 	if err != nil {
 		return err
 	}
@@ -68,7 +67,7 @@ func (st *EtcdGameStorageStorage) GetBlock(ctx context.Context, name string) ([]
 
 	var blocks []*proto.Block
 	for _, kv := range kvs {
-		block, err := etcd.Unmarshal[proto.Block](string(kv.Value))
+		block, err := Unmarshal[proto.Block](string(kv.Value))
 		if err != nil {
 			return nil, err
 		}

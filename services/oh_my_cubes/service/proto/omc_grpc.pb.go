@@ -22,10 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OMCClient interface {
-	CreateRealm(ctx context.Context, in *Realm, opts ...grpc.CallOption) (*Empty, error)
-	GetRealms(ctx context.Context, in *RealmId, opts ...grpc.CallOption) (OMC_GetRealmsClient, error)
-	GetState(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*State, error)
-	SendAction(ctx context.Context, in *Action, opts ...grpc.CallOption) (*State, error)
+	AddBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error)
+	GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (*Block, error)
 }
 
 type oMCClient struct {
@@ -36,59 +34,18 @@ func NewOMCClient(cc grpc.ClientConnInterface) OMCClient {
 	return &oMCClient{cc}
 }
 
-func (c *oMCClient) CreateRealm(ctx context.Context, in *Realm, opts ...grpc.CallOption) (*Empty, error) {
+func (c *oMCClient) AddBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/proto_omc.OMC/CreateRealm", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto_omc.OMC/AddBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oMCClient) GetRealms(ctx context.Context, in *RealmId, opts ...grpc.CallOption) (OMC_GetRealmsClient, error) {
-	stream, err := c.cc.NewStream(ctx, &OMC_ServiceDesc.Streams[0], "/proto_omc.OMC/GetRealms", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &oMCGetRealmsClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type OMC_GetRealmsClient interface {
-	Recv() (*Realm, error)
-	grpc.ClientStream
-}
-
-type oMCGetRealmsClient struct {
-	grpc.ClientStream
-}
-
-func (x *oMCGetRealmsClient) Recv() (*Realm, error) {
-	m := new(Realm)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
-func (c *oMCClient) GetState(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*State, error) {
-	out := new(State)
-	err := c.cc.Invoke(ctx, "/proto_omc.OMC/GetState", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *oMCClient) SendAction(ctx context.Context, in *Action, opts ...grpc.CallOption) (*State, error) {
-	out := new(State)
-	err := c.cc.Invoke(ctx, "/proto_omc.OMC/SendAction", in, out, opts...)
+func (c *oMCClient) GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (*Block, error) {
+	out := new(Block)
+	err := c.cc.Invoke(ctx, "/proto_omc.OMC/GetBlocks", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -99,10 +56,8 @@ func (c *oMCClient) SendAction(ctx context.Context, in *Action, opts ...grpc.Cal
 // All implementations must embed UnimplementedOMCServer
 // for forward compatibility
 type OMCServer interface {
-	CreateRealm(context.Context, *Realm) (*Empty, error)
-	GetRealms(*RealmId, OMC_GetRealmsServer) error
-	GetState(context.Context, *Empty) (*State, error)
-	SendAction(context.Context, *Action) (*State, error)
+	AddBlock(context.Context, *Block) (*Empty, error)
+	GetBlocks(context.Context, *BlockId) (*Block, error)
 	mustEmbedUnimplementedOMCServer()
 }
 
@@ -110,17 +65,11 @@ type OMCServer interface {
 type UnimplementedOMCServer struct {
 }
 
-func (UnimplementedOMCServer) CreateRealm(context.Context, *Realm) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateRealm not implemented")
+func (UnimplementedOMCServer) AddBlock(context.Context, *Block) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddBlock not implemented")
 }
-func (UnimplementedOMCServer) GetRealms(*RealmId, OMC_GetRealmsServer) error {
-	return status.Errorf(codes.Unimplemented, "method GetRealms not implemented")
-}
-func (UnimplementedOMCServer) GetState(context.Context, *Empty) (*State, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetState not implemented")
-}
-func (UnimplementedOMCServer) SendAction(context.Context, *Action) (*State, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SendAction not implemented")
+func (UnimplementedOMCServer) GetBlocks(context.Context, *BlockId) (*Block, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetBlocks not implemented")
 }
 func (UnimplementedOMCServer) mustEmbedUnimplementedOMCServer() {}
 
@@ -135,77 +84,38 @@ func RegisterOMCServer(s grpc.ServiceRegistrar, srv OMCServer) {
 	s.RegisterService(&OMC_ServiceDesc, srv)
 }
 
-func _OMC_CreateRealm_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Realm)
+func _OMC_AddBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Block)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OMCServer).CreateRealm(ctx, in)
+		return srv.(OMCServer).AddBlock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto_omc.OMC/CreateRealm",
+		FullMethod: "/proto_omc.OMC/AddBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OMCServer).CreateRealm(ctx, req.(*Realm))
+		return srv.(OMCServer).AddBlock(ctx, req.(*Block))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OMC_GetRealms_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(RealmId)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(OMCServer).GetRealms(m, &oMCGetRealmsServer{stream})
-}
-
-type OMC_GetRealmsServer interface {
-	Send(*Realm) error
-	grpc.ServerStream
-}
-
-type oMCGetRealmsServer struct {
-	grpc.ServerStream
-}
-
-func (x *oMCGetRealmsServer) Send(m *Realm) error {
-	return x.ServerStream.SendMsg(m)
-}
-
-func _OMC_GetState_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Empty)
+func _OMC_GetBlocks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(BlockId)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OMCServer).GetState(ctx, in)
+		return srv.(OMCServer).GetBlocks(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto_omc.OMC/GetState",
+		FullMethod: "/proto_omc.OMC/GetBlocks",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OMCServer).GetState(ctx, req.(*Empty))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _OMC_SendAction_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(Action)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(OMCServer).SendAction(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/proto_omc.OMC/SendAction",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OMCServer).SendAction(ctx, req.(*Action))
+		return srv.(OMCServer).GetBlocks(ctx, req.(*BlockId))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -218,24 +128,14 @@ var OMC_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OMCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "CreateRealm",
-			Handler:    _OMC_CreateRealm_Handler,
+			MethodName: "AddBlock",
+			Handler:    _OMC_AddBlock_Handler,
 		},
 		{
-			MethodName: "GetState",
-			Handler:    _OMC_GetState_Handler,
-		},
-		{
-			MethodName: "SendAction",
-			Handler:    _OMC_SendAction_Handler,
+			MethodName: "GetBlocks",
+			Handler:    _OMC_GetBlocks_Handler,
 		},
 	},
-	Streams: []grpc.StreamDesc{
-		{
-			StreamName:    "GetRealms",
-			Handler:       _OMC_GetRealms_Handler,
-			ServerStreams: true,
-		},
-	},
+	Streams:  []grpc.StreamDesc{},
 	Metadata: "omc.proto",
 }

@@ -17,27 +17,9 @@ type Client struct {
 	lg         *zap.Logger
 }
 
-func (c *Client) CreateRealm(ctx context.Context) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c *Client) GetRealm(ctx context.Context, in *proto.RealmId) (*proto.Realm, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c *Client) GetState(ctx context.Context) (*proto.State, error) {
-	return c.omcClient.GetState(c.getAuthContext(ctx), &proto.Empty{})
-}
-
 func (c *Client) getAuthContext(ctx context.Context) context.Context {
 	header := metadata.New(map[string]string{auth.JWT_METADATA: c.authInfo.Token})
 	return metadata.NewOutgoingContext(ctx, header)
-}
-
-func (c *Client) SendAction(ctx context.Context, in *proto.Action) (*proto.State, error) {
-	return c.omcClient.SendAction(c.getAuthContext(ctx), in)
 }
 
 func NewClient(target string, authTarget string, lg *zap.Logger) Client {

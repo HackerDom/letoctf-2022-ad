@@ -46,16 +46,5 @@ func (mid *GRPCMiddlewareImpl) Intercept(ctx context.Context, req interface{}, i
 		return nil, errors.New("password mismatch")
 	}
 
-	userContext := SetUser(credsFound.Login, ctx)
-
-	mid.lg.Info("--> login as: " + credsFound.Login)
-	return handler(userContext, req)
-}
-
-func SetUser(login string, ctx context.Context) context.Context {
-	return context.WithValue(ctx, "user", login)
-}
-
-func GetUser(ctx context.Context) string {
-	return ctx.Value("user").(string)
+	return handler(ctx, req)
 }
