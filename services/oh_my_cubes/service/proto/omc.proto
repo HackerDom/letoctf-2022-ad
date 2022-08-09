@@ -5,7 +5,31 @@ package proto_omc;
 
 service OMC {
   rpc AddBlock(Block) returns (Empty){}
-  rpc GetBlocks(BlockId) returns (Block){}
+  rpc GetBlocks(BlockId) returns (stream Block){}
+  rpc PutShared(Block) returns (SharedBlockCreateResponse){}
+  rpc GetShared(GetSharedBlock) returns (SharedBlock){}
+}
+
+message GetSharedBlock {
+  string SharedId = 1;
+  string AdminKey = 2;
+}
+
+message SharedBlockCreateResponse {
+  BlockMetadata Metadata =1;
+  string AdminKey = 2;
+}
+
+message SharedBlock{
+  BlockMetadata Metadata = 1;
+  Block Block = 2;
+  string AdminKey = 3;
+}
+
+message BlockMetadata{
+  int64 CreatedAt = 1;
+  string SharedId = 2;
+  string SecretNotes = 3;
 }
 
 message BlockId{

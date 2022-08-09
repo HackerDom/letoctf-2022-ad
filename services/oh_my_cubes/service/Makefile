@@ -1,6 +1,6 @@
 SUBDIRS := \
 	./proto \
-	./game_server
+	./omc_server
 
 all: $(SUBDIRS)
 $(SUBDIRS):

@@ -23,7 +23,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OMCClient interface {
 	AddBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error)
-	GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (*Block, error)
+	GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (OMC_GetBlocksClient, error)
+	PutShared(ctx context.Context, in *Block, opts ...grpc.CallOption) (*SharedBlockCreateResponse, error)
+	GetShared(ctx context.Context, in *GetSharedBlock, opts ...grpc.CallOption) (*SharedBlock, error)
 }
 
 type oMCClient struct {
@@ -43,9 +45,50 @@ func (c *oMCClient) AddBlock(ctx context.Context, in *Block, opts ...grpc.CallOp
 	return out, nil
 }
 
-func (c *oMCClient) GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (*Block, error) {
-	out := new(Block)
-	err := c.cc.Invoke(ctx, "/proto_omc.OMC/GetBlocks", in, out, opts...)
+func (c *oMCClient) GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (OMC_GetBlocksClient, error) {
+	stream, err := c.cc.NewStream(ctx, &OMC_ServiceDesc.Streams[0], "/proto_omc.OMC/GetBlocks", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &oMCGetBlocksClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type OMC_GetBlocksClient interface {
+	Recv() (*Block, error)
+	grpc.ClientStream
+}
+
+type oMCGetBlocksClient struct {
+	grpc.ClientStream
+}
+
+func (x *oMCGetBlocksClient) Recv() (*Block, error) {
+	m := new(Block)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *oMCClient) PutShared(ctx context.Context, in *Block, opts ...grpc.CallOption) (*SharedBlockCreateResponse, error) {
+	out := new(SharedBlockCreateResponse)
+	err := c.cc.Invoke(ctx, "/proto_omc.OMC/PutShared", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *oMCClient) GetShared(ctx context.Context, in *GetSharedBlock, opts ...grpc.CallOption) (*SharedBlock, error) {
+	out := new(SharedBlock)
+	err := c.cc.Invoke(ctx, "/proto_omc.OMC/GetShared", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +100,9 @@ func (c *oMCClient) GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.Cal
 // for forward compatibility
 type OMCServer interface {
 	AddBlock(context.Context, *Block) (*Empty, error)
-	GetBlocks(context.Context, *BlockId) (*Block, error)
+	GetBlocks(*BlockId, OMC_GetBlocksServer) error
+	PutShared(context.Context, *Block) (*SharedBlockCreateResponse, error)
+	GetShared(context.Context, *GetSharedBlock) (*SharedBlock, error)
 	mustEmbedUnimplementedOMCServer()
 }
 
@@ -68,8 +113,14 @@ type UnimplementedOMCServer struct {
 func (UnimplementedOMCServer) AddBlock(context.Context, *Block) (*Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddBlock not implemented")
 }
-func (UnimplementedOMCServer) GetBlocks(context.Context, *BlockId) (*Block, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetBlocks not implemented")
+func (UnimplementedOMCServer) GetBlocks(*BlockId, OMC_GetBlocksServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetBlocks not implemented")
+}
+func (UnimplementedOMCServer) PutShared(context.Context, *Block) (*SharedBlockCreateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutShared not implemented")
+}
+func (UnimplementedOMCServer) GetShared(context.Context, *GetSharedBlock) (*SharedBlock, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetShared not implemented")
 }
 func (UnimplementedOMCServer) mustEmbedUnimplementedOMCServer() {}
 
@@ -102,20 +153,59 @@ func _OMC_AddBlock_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OMC_GetBlocks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(BlockId)
+func _OMC_GetBlocks_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(BlockId)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(OMCServer).GetBlocks(m, &oMCGetBlocksServer{stream})
+}
+
+type OMC_GetBlocksServer interface {
+	Send(*Block) error
+	grpc.ServerStream
+}
+
+type oMCGetBlocksServer struct {
+	grpc.ServerStream
+}
+
+func (x *oMCGetBlocksServer) Send(m *Block) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func _OMC_PutShared_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Block)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OMCServer).GetBlocks(ctx, in)
+		return srv.(OMCServer).PutShared(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto_omc.OMC/GetBlocks",
+		FullMethod: "/proto_omc.OMC/PutShared",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OMCServer).GetBlocks(ctx, req.(*BlockId))
+		return srv.(OMCServer).PutShared(ctx, req.(*Block))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OMC_GetShared_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSharedBlock)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OMCServer).GetShared(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/proto_omc.OMC/GetShared",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OMCServer).GetShared(ctx, req.(*GetSharedBlock))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -132,10 +222,20 @@ var OMC_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _OMC_AddBlock_Handler,
 		},
 		{
-			MethodName: "GetBlocks",
-			Handler:    _OMC_GetBlocks_Handler,
+			MethodName: "PutShared",
+			Handler:    _OMC_PutShared_Handler,
+		},
+		{
+			MethodName: "GetShared",
+			Handler:    _OMC_GetShared_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetBlocks",
+			Handler:       _OMC_GetBlocks_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "omc.proto",
 }

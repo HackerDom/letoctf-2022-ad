@@ -3,8 +3,8 @@ package auth
 import (
 	"context"
 	"go.uber.org/zap"
+	"summer-2022/lib"
 	"summer-2022/models"
-	"summer-2022/omc_server"
 	"time"
 )
 
@@ -14,11 +14,11 @@ type CredentialsStorage interface {
 }
 
 type EtcdCredentialsStorage struct {
-	storage main.EtcdStorage
+	storage lib.EtcdStorage
 	lg      *zap.Logger
 }
 
-func NewEtcdCredentialsStorage(etcdStorage main.EtcdStorage, lg *zap.Logger) *EtcdCredentialsStorage {
+func NewEtcdCredentialsStorage(etcdStorage lib.EtcdStorage, lg *zap.Logger) *EtcdCredentialsStorage {
 	return &EtcdCredentialsStorage{
 		storage: etcdStorage,
 		lg:      lg,
@@ -33,7 +33,7 @@ func (st *EtcdCredentialsStorage) Get(login string) (models.Credentials, error) 
 		return models.Credentials{}, err
 	}
 
-	creds, err := main.Unmarshal[models.Credentials](value)
+	creds, err := lib.Unmarshal[models.Credentials](value)
 	if err != nil {
 		return models.Credentials{}, err
 	}
@@ -42,7 +42,7 @@ func (st *EtcdCredentialsStorage) Get(login string) (models.Credentials, error) 
 }
 
 func (st *EtcdCredentialsStorage) GetOrAdd(login string, creds models.Credentials) (models.Credentials, error) {
-	value, err := main.Marshal[models.Credentials](creds)
+	value, err := lib.Marshal[models.Credentials](creds)
 	if err != nil {
 		return models.Credentials{}, err
 	}

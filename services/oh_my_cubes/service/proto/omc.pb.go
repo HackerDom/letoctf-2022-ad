@@ -20,6 +20,242 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type GetSharedBlock struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	SharedId string `protobuf:"bytes,1,opt,name=SharedId,proto3" json:"SharedId,omitempty"`
+	AdminKey string `protobuf:"bytes,2,opt,name=AdminKey,proto3" json:"AdminKey,omitempty"`
+}
+
+func (x *GetSharedBlock) Reset() {
+	*x = GetSharedBlock{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_omc_proto_msgTypes[0]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *GetSharedBlock) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSharedBlock) ProtoMessage() {}
+
+func (x *GetSharedBlock) ProtoReflect() protoreflect.Message {
+	mi := &file_omc_proto_msgTypes[0]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSharedBlock.ProtoReflect.Descriptor instead.
+func (*GetSharedBlock) Descriptor() ([]byte, []int) {
+	return file_omc_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *GetSharedBlock) GetSharedId() string {
+	if x != nil {
+		return x.SharedId
+	}
+	return ""
+}
+
+func (x *GetSharedBlock) GetAdminKey() string {
+	if x != nil {
+		return x.AdminKey
+	}
+	return ""
+}
+
+type SharedBlockCreateResponse struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Metadata *BlockMetadata `protobuf:"bytes,1,opt,name=Metadata,proto3" json:"Metadata,omitempty"`
+	AdminKey string         `protobuf:"bytes,2,opt,name=AdminKey,proto3" json:"AdminKey,omitempty"`
+}
+
+func (x *SharedBlockCreateResponse) Reset() {
+	*x = SharedBlockCreateResponse{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_omc_proto_msgTypes[1]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SharedBlockCreateResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SharedBlockCreateResponse) ProtoMessage() {}
+
+func (x *SharedBlockCreateResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_omc_proto_msgTypes[1]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SharedBlockCreateResponse.ProtoReflect.Descriptor instead.
+func (*SharedBlockCreateResponse) Descriptor() ([]byte, []int) {
+	return file_omc_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *SharedBlockCreateResponse) GetMetadata() *BlockMetadata {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+func (x *SharedBlockCreateResponse) GetAdminKey() string {
+	if x != nil {
+		return x.AdminKey
+	}
+	return ""
+}
+
+type SharedBlock struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	Metadata *BlockMetadata `protobuf:"bytes,1,opt,name=Metadata,proto3" json:"Metadata,omitempty"`
+	Block    *Block         `protobuf:"bytes,2,opt,name=Block,proto3" json:"Block,omitempty"`
+	AdminKey string         `protobuf:"bytes,3,opt,name=AdminKey,proto3" json:"AdminKey,omitempty"`
+}
+
+func (x *SharedBlock) Reset() {
+	*x = SharedBlock{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_omc_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *SharedBlock) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SharedBlock) ProtoMessage() {}
+
+func (x *SharedBlock) ProtoReflect() protoreflect.Message {
+	mi := &file_omc_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SharedBlock.ProtoReflect.Descriptor instead.
+func (*SharedBlock) Descriptor() ([]byte, []int) {
+	return file_omc_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SharedBlock) GetMetadata() *BlockMetadata {
+	if x != nil {
+		return x.Metadata
+	}
+	return nil
+}
+
+func (x *SharedBlock) GetBlock() *Block {
+	if x != nil {
+		return x.Block
+	}
+	return nil
+}
+
+func (x *SharedBlock) GetAdminKey() string {
+	if x != nil {
+		return x.AdminKey
+	}
+	return ""
+}
+
+type BlockMetadata struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	CreatedAt   int64  `protobuf:"varint,1,opt,name=CreatedAt,proto3" json:"CreatedAt,omitempty"`
+	SharedId    string `protobuf:"bytes,2,opt,name=SharedId,proto3" json:"SharedId,omitempty"`
+	SecretNotes string `protobuf:"bytes,3,opt,name=SecretNotes,proto3" json:"SecretNotes,omitempty"`
+}
+
+func (x *BlockMetadata) Reset() {
+	*x = BlockMetadata{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_omc_proto_msgTypes[3]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *BlockMetadata) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BlockMetadata) ProtoMessage() {}
+
+func (x *BlockMetadata) ProtoReflect() protoreflect.Message {
+	mi := &file_omc_proto_msgTypes[3]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BlockMetadata.ProtoReflect.Descriptor instead.
+func (*BlockMetadata) Descriptor() ([]byte, []int) {
+	return file_omc_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *BlockMetadata) GetCreatedAt() int64 {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return 0
+}
+
+func (x *BlockMetadata) GetSharedId() string {
+	if x != nil {
+		return x.SharedId
+	}
+	return ""
+}
+
+func (x *BlockMetadata) GetSecretNotes() string {
+	if x != nil {
+		return x.SecretNotes
+	}
+	return ""
+}
+
 type BlockId struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -31,7 +267,7 @@ type BlockId struct {
 func (x *BlockId) Reset() {
 	*x = BlockId{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_omc_proto_msgTypes[0]
+		mi := &file_omc_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -44,7 +280,7 @@ func (x *BlockId) String() string {
 func (*BlockId) ProtoMessage() {}
 
 func (x *BlockId) ProtoReflect() protoreflect.Message {
-	mi := &file_omc_proto_msgTypes[0]
+	mi := &file_omc_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +293,7 @@ func (x *BlockId) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BlockId.ProtoReflect.Descriptor instead.
 func (*BlockId) Descriptor() ([]byte, []int) {
-	return file_omc_proto_rawDescGZIP(), []int{0}
+	return file_omc_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *BlockId) GetName() string {
@@ -79,7 +315,7 @@ type Block struct {
 func (x *Block) Reset() {
 	*x = Block{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_omc_proto_msgTypes[1]
+		mi := &file_omc_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -92,7 +328,7 @@ func (x *Block) String() string {
 func (*Block) ProtoMessage() {}
 
 func (x *Block) ProtoReflect() protoreflect.Message {
-	mi := &file_omc_proto_msgTypes[1]
+	mi := &file_omc_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -105,7 +341,7 @@ func (x *Block) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Block.ProtoReflect.Descriptor instead.
 func (*Block) Descriptor() ([]byte, []int) {
-	return file_omc_proto_rawDescGZIP(), []int{1}
+	return file_omc_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *Block) GetName() *BlockId {
@@ -131,7 +367,7 @@ type Empty struct {
 func (x *Empty) Reset() {
 	*x = Empty{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_omc_proto_msgTypes[2]
+		mi := &file_omc_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -144,7 +380,7 @@ func (x *Empty) String() string {
 func (*Empty) ProtoMessage() {}
 
 func (x *Empty) ProtoReflect() protoreflect.Message {
-	mi := &file_omc_proto_msgTypes[2]
+	mi := &file_omc_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -157,14 +393,41 @@ func (x *Empty) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Empty.ProtoReflect.Descriptor instead.
 func (*Empty) Descriptor() ([]byte, []int) {
-	return file_omc_proto_rawDescGZIP(), []int{2}
+	return file_omc_proto_rawDescGZIP(), []int{6}
 }
 
 var File_omc_proto protoreflect.FileDescriptor
 
 var file_omc_proto_rawDesc = []byte{
 	0x0a, 0x09, 0x6f, 0x6d, 0x63, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x09, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x22, 0x1d, 0x0a, 0x07, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x49,
+	0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x22, 0x48, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x53, 0x68, 0x61,
+	0x72, 0x65, 0x64, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x1a, 0x0a, 0x08, 0x53, 0x68, 0x61, 0x72,
+	0x65, 0x64, 0x49, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x53, 0x68, 0x61, 0x72,
+	0x65, 0x64, 0x49, 0x64, 0x12, 0x1a, 0x0a, 0x08, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x4b, 0x65, 0x79,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x4b, 0x65, 0x79,
+	0x22, 0x6d, 0x0a, 0x19, 0x53, 0x68, 0x61, 0x72, 0x65, 0x64, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x43,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x34, 0x0a,
+	0x08, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32,
+	0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63,
+	0x6b, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x52, 0x08, 0x4d, 0x65, 0x74, 0x61, 0x64,
+	0x61, 0x74, 0x61, 0x12, 0x1a, 0x0a, 0x08, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x4b, 0x65, 0x79, 0x18,
+	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x4b, 0x65, 0x79, 0x22,
+	0x87, 0x01, 0x0a, 0x0b, 0x53, 0x68, 0x61, 0x72, 0x65, 0x64, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12,
+	0x34, 0x0a, 0x08, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x0b, 0x32, 0x18, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c,
+	0x6f, 0x63, 0x6b, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x52, 0x08, 0x4d, 0x65, 0x74,
+	0x61, 0x64, 0x61, 0x74, 0x61, 0x12, 0x26, 0x0a, 0x05, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x0b, 0x32, 0x10, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63,
+	0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x52, 0x05, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x1a, 0x0a,
+	0x08, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x4b, 0x65, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x08, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x4b, 0x65, 0x79, 0x22, 0x6b, 0x0a, 0x0d, 0x42, 0x6c, 0x6f,
+	0x63, 0x6b, 0x4d, 0x65, 0x74, 0x61, 0x64, 0x61, 0x74, 0x61, 0x12, 0x1c, 0x0a, 0x09, 0x43, 0x72,
+	0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x43,
+	0x72, 0x65, 0x61, 0x74, 0x65, 0x64, 0x41, 0x74, 0x12, 0x1a, 0x0a, 0x08, 0x53, 0x68, 0x61, 0x72,
+	0x65, 0x64, 0x49, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x53, 0x68, 0x61, 0x72,
+	0x65, 0x64, 0x49, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x53, 0x65, 0x63, 0x72, 0x65, 0x74, 0x4e, 0x6f,
+	0x74, 0x65, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x53, 0x65, 0x63, 0x72, 0x65,
+	0x74, 0x4e, 0x6f, 0x74, 0x65, 0x73, 0x22, 0x1d, 0x0a, 0x07, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x49,
 	0x64, 0x12, 0x12, 0x0a, 0x04, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x04, 0x4e, 0x61, 0x6d, 0x65, 0x22, 0x51, 0x0a, 0x05, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x26,
 	0x0a, 0x04, 0x4e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x12, 0x2e, 0x70,
@@ -172,15 +435,23 @@ var file_omc_proto_rawDesc = []byte{
 	0x52, 0x04, 0x4e, 0x61, 0x6d, 0x65, 0x12, 0x20, 0x0a, 0x0b, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69,
 	0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x44, 0x65, 0x73,
 	0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x07, 0x0a, 0x05, 0x45, 0x6d, 0x70, 0x74,
-	0x79, 0x32, 0x6c, 0x0a, 0x03, 0x4f, 0x4d, 0x43, 0x12, 0x30, 0x0a, 0x08, 0x41, 0x64, 0x64, 0x42,
-	0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x10, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63,
-	0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x1a, 0x10, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f,
-	0x6d, 0x63, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x33, 0x0a, 0x09, 0x47, 0x65,
-	0x74, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x73, 0x12, 0x12, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f,
-	0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x49, 0x64, 0x1a, 0x10, 0x2e, 0x70, 0x72,
-	0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x22, 0x00, 0x42,
-	0x0a, 0x5a, 0x08, 0x2e, 0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x79, 0x32, 0xf7, 0x01, 0x0a, 0x03, 0x4f, 0x4d, 0x43, 0x12, 0x30, 0x0a, 0x08, 0x41, 0x64, 0x64,
+	0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x12, 0x10, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d,
+	0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x1a, 0x10, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f,
+	0x6f, 0x6d, 0x63, 0x2e, 0x45, 0x6d, 0x70, 0x74, 0x79, 0x22, 0x00, 0x12, 0x35, 0x0a, 0x09, 0x47,
+	0x65, 0x74, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x73, 0x12, 0x12, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x49, 0x64, 0x1a, 0x10, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x22, 0x00,
+	0x30, 0x01, 0x12, 0x45, 0x0a, 0x09, 0x50, 0x75, 0x74, 0x53, 0x68, 0x61, 0x72, 0x65, 0x64, 0x12,
+	0x10, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x42, 0x6c, 0x6f, 0x63,
+	0x6b, 0x1a, 0x24, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x53, 0x68,
+	0x61, 0x72, 0x65, 0x64, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x00, 0x12, 0x40, 0x0a, 0x09, 0x47, 0x65, 0x74,
+	0x53, 0x68, 0x61, 0x72, 0x65, 0x64, 0x12, 0x19, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f,
+	0x6d, 0x63, 0x2e, 0x47, 0x65, 0x74, 0x53, 0x68, 0x61, 0x72, 0x65, 0x64, 0x42, 0x6c, 0x6f, 0x63,
+	0x6b, 0x1a, 0x16, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x5f, 0x6f, 0x6d, 0x63, 0x2e, 0x53, 0x68,
+	0x61, 0x72, 0x65, 0x64, 0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x22, 0x00, 0x42, 0x0a, 0x5a, 0x08, 0x2e,
+	0x2e, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -195,23 +466,34 @@ func file_omc_proto_rawDescGZIP() []byte {
 	return file_omc_proto_rawDescData
 }
 
-var file_omc_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_omc_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_omc_proto_goTypes = []interface{}{
-	(*BlockId)(nil), // 0: proto_omc.BlockId
-	(*Block)(nil),   // 1: proto_omc.Block
-	(*Empty)(nil),   // 2: proto_omc.Empty
+	(*GetSharedBlock)(nil),            // 0: proto_omc.GetSharedBlock
+	(*SharedBlockCreateResponse)(nil), // 1: proto_omc.SharedBlockCreateResponse
+	(*SharedBlock)(nil),               // 2: proto_omc.SharedBlock
+	(*BlockMetadata)(nil),             // 3: proto_omc.BlockMetadata
+	(*BlockId)(nil),                   // 4: proto_omc.BlockId
+	(*Block)(nil),                     // 5: proto_omc.Block
+	(*Empty)(nil),                     // 6: proto_omc.Empty
 }
 var file_omc_proto_depIdxs = []int32{
-	0, // 0: proto_omc.Block.Name:type_name -> proto_omc.BlockId
-	1, // 1: proto_omc.OMC.AddBlock:input_type -> proto_omc.Block
-	0, // 2: proto_omc.OMC.GetBlocks:input_type -> proto_omc.BlockId
-	2, // 3: proto_omc.OMC.AddBlock:output_type -> proto_omc.Empty
-	1, // 4: proto_omc.OMC.GetBlocks:output_type -> proto_omc.Block
-	3, // [3:5] is the sub-list for method output_type
-	1, // [1:3] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	3, // 0: proto_omc.SharedBlockCreateResponse.Metadata:type_name -> proto_omc.BlockMetadata
+	3, // 1: proto_omc.SharedBlock.Metadata:type_name -> proto_omc.BlockMetadata
+	5, // 2: proto_omc.SharedBlock.Block:type_name -> proto_omc.Block
+	4, // 3: proto_omc.Block.Name:type_name -> proto_omc.BlockId
+	5, // 4: proto_omc.OMC.AddBlock:input_type -> proto_omc.Block
+	4, // 5: proto_omc.OMC.GetBlocks:input_type -> proto_omc.BlockId
+	5, // 6: proto_omc.OMC.PutShared:input_type -> proto_omc.Block
+	0, // 7: proto_omc.OMC.GetShared:input_type -> proto_omc.GetSharedBlock
+	6, // 8: proto_omc.OMC.AddBlock:output_type -> proto_omc.Empty
+	5, // 9: proto_omc.OMC.GetBlocks:output_type -> proto_omc.Block
+	1, // 10: proto_omc.OMC.PutShared:output_type -> proto_omc.SharedBlockCreateResponse
+	2, // 11: proto_omc.OMC.GetShared:output_type -> proto_omc.SharedBlock
+	8, // [8:12] is the sub-list for method output_type
+	4, // [4:8] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_omc_proto_init() }
@@ -221,7 +503,7 @@ func file_omc_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_omc_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*BlockId); i {
+			switch v := v.(*GetSharedBlock); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -233,7 +515,7 @@ func file_omc_proto_init() {
 			}
 		}
 		file_omc_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*Block); i {
+			switch v := v.(*SharedBlockCreateResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -245,6 +527,54 @@ func file_omc_proto_init() {
 			}
 		}
 		file_omc_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*SharedBlock); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_omc_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BlockMetadata); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_omc_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*BlockId); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_omc_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*Block); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_omc_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*Empty); i {
 			case 0:
 				return &v.state
@@ -263,7 +593,7 @@ func file_omc_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_omc_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

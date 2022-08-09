@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/gofrs/uuid"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
 	"summer-2022/auth"
+	"summer-2022/lib"
 	"summer-2022/proto"
 )
 
@@ -13,7 +15,7 @@ func main() {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
 
-	etcdStorage := NewEtcdStorage("localhost:2379", logger)
+	etcdStorage := lib.NewEtcdStorage("localhost:2379", logger)
 
 	credsStorage := auth.NewEtcdCredentialsStorage(etcdStorage, logger)
 	jwtManager := auth.NewJWTManagerImpl([]byte("secret"), logger)
@@ -41,6 +43,14 @@ func main() {
 
 	proto.RegisterOMCServer(omcServer, omcApi)
 	startServer(host, 9090, logger, omcServer)
+}
+
+func run() {
+	uid, _ := uuid.NewV1()
+	v1, _ := uuid.TimestampFromV1(uid)
+	time, _ := v1.Time()
+	ts := time.UnixNano()
+	fmt.Println(time.UnixNano(), ts)
 }
 
 func startServer(host string, port int, logger *zap.Logger, server *grpc.Server) {
