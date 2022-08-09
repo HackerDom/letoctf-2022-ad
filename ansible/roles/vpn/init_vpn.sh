@@ -63,6 +63,7 @@ sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.$((NUMBER_OF_TEAMS-1))
 sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.$((NUMBER_OF_TEAMS-1))\}/" files/snat/del_snat_rules.sh 
 sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.$((NUMBER_OF_TEAMS-1))\}/" files/snat/add_snat_rules.sh
 sed -E -i "s/for num in \{0\.\.[0-9]+\}/for num in \{0\.\.$((NUMBER_OF_TEAMS-1))\}/" files/snat/add_snat_rules.sh
+sed -E -i "s/openvpn@\{0\.\.[0-9]+\}/openvpn@\{0\.\.29\}/" handlers/main.yml
 
 echo "Generating VPN configs"
 gen/gen_all_keys.sh

@@ -4,15 +4,15 @@ on:
     inputs:
       ip:
         description: "ip"
-        default: '62.84.125.140'
+        default: '51.250.90.182'
         required: true
       hostname:
         description: 'hostname'
-        default: 'vpn.cerebralobserver.ru'
+        default: 'vpn.ad.leto-hackerdom.ru'
         required: true
       number_of_teams:
         description: 'number_of_teams'
-        default: '10'
+        default: '30'
         required: true
 
 

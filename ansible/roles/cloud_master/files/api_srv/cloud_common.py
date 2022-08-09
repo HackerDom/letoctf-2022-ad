@@ -9,7 +9,7 @@ import time
 import os
 import shutil
 
-DOMAIN = "cloud.cerebralobserver.ru"
+DOMAIN = "cloud.ad.leto-hackerdom.ru"
 
 # change me before the game
 ROUTER_HOST = "vpn.cerebralobserver.ru"
