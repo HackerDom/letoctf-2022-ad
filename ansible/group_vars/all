@@ -40,30 +40,30 @@ cs_flags_secret: ohKai2eepi
 cs_round_length: 30
 cs_flag_life_time: 15
 cs_disable_irrelevant_services: 0
-cs_time: "['2022-08-09 00:00:00', '2022-08-09 23:59:59']"
+cs_time: "['2022-08-09 09:00:00', '2022-08-09 14:59:59']"
 
 cs_scoring: |
     start_flag_price => 10,
     heating_speed => 1/12,
-    max_flag_price => 30,
+    max_flag_price => 10,
     cooling_down => 1/2,
     heating_flags_limit => 1,
     cooling_submissions_limit => 1,
     dying_rounds => 120,
-    dying_flag_price => 1
+    dying_flag_price => 10
 
 cs_checkers_hostname_cb: |
   sub { my ($team, $service) = @_; $team->{host} }
 
 teams: |
-  {name => 'Ice Cream',    network => '10.60.2.0/24', host => '10.60.2.4', logo => 'http://example.com', token => 'CLOUD_2_1b8c6e0995c505b2afbecc649b1004c2', country => 'Russia'},
-  {name => 'Tiramisu',     network => '10.60.3.0/24', host => '10.60.3.4', logo => 'http://example.com', token => 'CLOUD_3_e17ad506ab9bf3d030bdd702867fb857', country => 'Russia'},
-  {name => 'Eclair',       network => '10.60.4.0/24', host => '10.60.4.4', logo => 'http://example.com', token => 'CLOUD_4_4482d263973177d8d4e7962f0f8a8d7f', country => 'Russia'},
-  {name => 'red velvet',   network => '10.60.5.0/24', host => '10.60.5.4', logo => 'http://example.com', token => 'CLOUD_5_c990c0c1632658046024d80768b7f855', country => 'Russia'},
-  {name => 'Lolipop',      network => '10.60.6.0/24', host => '10.60.6.4', logo => 'http://example.com', token => 'CLOUD_6_0eb7182d080e01196796da042c9940ca', country => 'Russia'},
-  {name => 'nougat team',  network => '10.60.7.0/24', host => '10.60.7.4', logo => 'http://example.com', token => 'CLOUD_7_2ddb8df5b477c587e901c984580075b2', country => 'Russia'},
-  {name => 'Gingerbread',  network => '10.60.8.0/24', host => '10.60.8.4', logo => 'http://example.com', token => 'CLOUD_8_0c6fd3124a07c324cf8a0426fb6832d4', country => 'Russia'},
-  {name => 'Honeycomb',    network => '10.60.9.0/24', host => '10.60.9.4', logo => 'http://example.com', token => 'CLOUD_9_ff10048009cfb7a1fa0af579ac5fd5d3', country => 'Russia'},
+  {name => 'Ice Cream',    network => '10.60.2.0/24',  host => '10.60.2.4',  logo => 'http://example.com', token => 'CLOUD_2_1b8c6e0995c505b2afbecc649b1004c2', country => 'Russia'},
+  {name => 'Tiramisu',     network => '10.60.3.0/24',  host => '10.60.3.4',  logo => 'http://example.com', token => 'CLOUD_3_e17ad506ab9bf3d030bdd702867fb857', country => 'Russia'},
+  {name => 'Eclair',       network => '10.60.4.0/24',  host => '10.60.4.4',  logo => 'http://example.com', token => 'CLOUD_4_4482d263973177d8d4e7962f0f8a8d7f', country => 'Russia'},
+  {name => 'red velvet',   network => '10.60.5.0/24',  host => '10.60.5.4',  logo => 'http://example.com', token => 'CLOUD_5_c990c0c1632658046024d80768b7f855', country => 'Russia'},
+  {name => 'Lolipop',      network => '10.60.6.0/24',  host => '10.60.6.4',  logo => 'http://example.com', token => 'CLOUD_6_0eb7182d080e01196796da042c9940ca', country => 'Russia'},
+  {name => 'nougat team',  network => '10.60.7.0/24',  host => '10.60.7.4',  logo => 'http://example.com', token => 'CLOUD_7_2ddb8df5b477c587e901c984580075b2', country => 'Russia'},
+  {name => 'Gingerbread',  network => '10.60.8.0/24',  host => '10.60.8.4',  logo => 'http://example.com', token => 'CLOUD_8_0c6fd3124a07c324cf8a0426fb6832d4', country => 'Russia'},
+  {name => 'Honeycomb',    network => '10.60.9.0/24',  host => '10.60.9.4',  logo => 'http://example.com', token => 'CLOUD_9_ff10048009cfb7a1fa0af579ac5fd5d3', country => 'Russia'},
   {name => 'Pie',          network => '10.60.10.0/24', host => '10.60.10.4', logo => 'http://example.com', token => 'CLOUD_10_db42538ccdcf807757319eb652608394', country => 'Russia'},
   {name => 'Snow Cone',    network => '10.60.11.0/24', host => '10.60.11.4', logo => 'http://example.com', token => 'CLOUD_11_00c68be67fbc80b2a68552b856443a11', country => 'Russia'},
   {name => 'Jelly Bean',   network => '10.60.12.0/24', host => '10.60.12.4', logo => 'http://example.com', token => 'CLOUD_12_4fd7a83d507a479820da649e598dda5b', country => 'Russia'},
