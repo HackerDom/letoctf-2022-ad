@@ -18,6 +18,8 @@ def check(req: CheckRequest) -> Verdict:
     x, y = gen_cords()
     x1, y1 = x-1, y+1
 
+    print(f"Generated cat at x:{x}, y:{y}!")
+
     api = Api(req.hostname)
 
     cat_id_1 = str(uuid4())

@@ -4,11 +4,19 @@ using CatFarm;
 var app = WebApplication.CreateBuilder(args).Build();
 var catField = new CatField();
 var farmsRegistry = new FarmRegistry();
+var logo = File.ReadAllBytes("logo.png");
+var index = File.ReadAllBytes("index.html");
+
+app.MapGet("/logo.png", async c =>
+{
+    c.Response.ContentType = "image/png";
+    await c.Response.Body.WriteAsync(logo);
+});
 
 app.MapGet("/", async (c) =>
 {
     c.Response.ContentType = "text/html";
-    
+    await c.Response.Body.WriteAsync(index);
 });
 
 app.MapGet("/cat/{cat}",async (HttpContext c, Guid cat) =>
