@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+option go_package = "../proto";
+package proto_omc;
+
+service OMC {
+  rpc AddBlock(Block) returns (Empty){}
+  rpc GetBlocks(BlockId) returns (Block){}
+}
+
+message BlockId{
+  string Name = 1;
+}
+
+message Block{
+  BlockId Name = 1;
+  string Description = 2;
+}
+
+message Empty{}
+

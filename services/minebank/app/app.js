@@ -11,8 +11,7 @@ app.use(function (err, req, res, next) {
 });
 
 const db = require("./models");
-// TODO: turn off force or delete this param
-db.sequelize.sync({ force: true }); // for production use without args
+db.sequelize.sync();
 app.use(function (req, resp, next) {
     req.db = db;
     next();
