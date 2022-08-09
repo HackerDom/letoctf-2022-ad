@@ -205,6 +205,32 @@ def send_msg():
     })
 
 
+@app.route('/encrypt_msg', methods=['GET'])
+def encrypt_msg():
+    msg_id, error = extract_b64(request.args, 'msg_id')
+    if error is not None:
+        return error_response(error)
+
+    msg = service.get_msg_by_id(msg_id)
+    if msg:
+        return error_response('cannot encrypt existing msg')
+
+    user_id, error = extract_b64(request.args, 'user_id')
+    if error is not None:
+        return error_response(error)
+
+    user = service.get_user_by_user_id(user_id)
+    if user is None:
+        return error_response('no such user')
+
+    encryption = service.encrypt_msg(msg_id, user)
+
+    return ok_response(msg={
+        'msg_id': b64encode(msg_id).decode(),
+        'encryption': b64encode(encryption).decode()
+    })
+
+
 @app.route('/get_msg', methods=['GET'])
 def get_msg():
     user, error = extract_user_from_session()
@@ -224,7 +250,7 @@ def get_msg():
         if error is not None:
             return error_response(error)
         if not service.chech_msg_encryption(msg, msg.user_to, encryption):
-            return error_response('wrong encryption')
+            return error_response(f'wrong encryption. ask {b64encode(msg.user_to_id).decode()} for right encryption')
 
     return ok_response(msg={
         'id': b64encode(msg.id).decode(),

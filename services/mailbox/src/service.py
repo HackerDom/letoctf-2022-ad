@@ -113,8 +113,7 @@ class Service:
         if Message.query.filter_by(id=msg_id).first() is not None:
             return None, 'msg exists'
 
-        cipher = self._get_cipher_from_user(user_to)
-        encryption = cipher.encrypt(msg_id)
+        encryption = self.encrypt_msg(msg_id, user_to)
 
         msg = Message(
             id=msg_id,
@@ -126,6 +125,10 @@ class Service:
         db.session.add(msg)
         db.session.commit()
         return (msg, encryption), None
+    
+    def encrypt_msg(self, msg_id:bytes, user:User) -> bytes:
+        cipher = self._get_cipher_from_user(user)
+        return cipher.encrypt(msg_id)
 
     def chech_msg_encryption(self, msg:Message, user:User, encryption:bytes) -> bool:
         cipher = self._get_cipher_from_user(user)

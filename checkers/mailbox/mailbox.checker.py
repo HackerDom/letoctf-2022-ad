@@ -136,9 +136,19 @@ def send_msg(api:API, dialogue_id:bytes, msg_text:bytes):
         dialogue_id=dialogue_id,
         text=msg_text
     ))
-    if verdict is not None:
+    if verdict:
         return None, verdict
     return (send_msg_rsp.id, send_msg_rsp.encryption), None
+
+
+def encrypt_msg(api:API, msg_id:bytes, user_id:bytes):
+    encrypt_msg_rsp, verdict = request_wrapper(api.encrypt_msg, EncryptMsgReq(
+        msg_id=msg_id,
+        user_id=user_id
+    ))
+    if verdict:
+        return None, verdict
+    return encrypt_msg_rsp.encryption, None
 
 
 def get_msg(api:API, msg:bytes, msg_encryption:bytes=None):
@@ -154,7 +164,7 @@ def get_msg(api:API, msg:bytes, msg_encryption:bytes=None):
 
 
 @checker.define_check
-def check_service(request:CheckRequest):
+def check_service(request:CheckRequest) -> Verdict:
     api1 = API(request.hostname, PORT)
     if verdict := ping(api1):
         return verdict
@@ -198,14 +208,18 @@ def check_service(request:CheckRequest):
         return Verdict.MUMBLE('different dialogue ids')
 
     msg_text = generate_random_string(8)
+    before_encryption, verdict = encrypt_msg(api1, Hash(msg_text).digest(), Hash(username2).digest())
+    if verdict:
+        return verdict
+
     msg, verdict = send_msg(api1, dialogue_id, msg_text)
     if verdict:
         return verdict
     msg_id, msg_encryption = msg
 
-    if verdict := get_msg(api1, msg_text, msg_encryption):
+    if verdict := get_msg(api1, msg_text, before_encryption):
         return verdict
-    if verdict := get_msg(api2, msg_text):
+    if verdict := get_msg(api2, msg_text, msg_encryption):
         return verdict
 
     return Verdict.OK()
@@ -248,7 +262,7 @@ class DialogueChecker(VulnChecker):
 
 
     @staticmethod
-    def get(request: GetRequest):
+    def get(request: GetRequest) -> Verdict:
         username1, password1, username2, password2 = (bytes.fromhex(x) for x in request.flag_id.split(':'))
 
         api2 = API(request.hostname, PORT)
@@ -268,7 +282,7 @@ class DialogueChecker(VulnChecker):
 @checker.define_vuln(flag_id_description='flag_id is message id (hex)')
 class MessageChecker(VulnChecker):
     @staticmethod
-    def put(request: PutRequest):
+    def put(request: PutRequest) -> Verdict:
         api1 = API(request.hostname, PORT)
         if verdict := ping(api1):
             return verdict
@@ -296,8 +310,12 @@ class MessageChecker(VulnChecker):
         dialogue_id, verdict = create_dialogue(api1, username2, dialogue_name)
         if verdict:
             return verdict
-        
+
         msg_text = request.flag.encode()
+        before_encryption, verdict = encrypt_msg(api1, Hash(msg_text).digest(), Hash(username2).digest())
+        if verdict:
+            return verdict
+
         msg, verdict = send_msg(api1, dialogue_id, msg_text)
         if verdict:
             return verdict
@@ -307,12 +325,25 @@ class MessageChecker(VulnChecker):
         if cipher.decrypt(msg_encryption) != msg_id:
             return Verdict.MUMBLE('wrong msg encryption')
 
-        flag_id = f'{username1.hex()}:{password1.hex()}:{username2.hex()}:{password2.hex()}:{dialogue_id.hex()}:{msg_id.hex()}:{msg_encryption.hex()}'
+        flag_id = ':'.join(
+            x.hex()
+            for x in (
+                username1, password1,
+                username2, password2,
+                dialogue_id, msg_id,
+                msg_encryption, before_encryption
+            )
+        )
         return Verdict.OK_WITH_FLAG_ID(msg_id.hex(), flag_id)
 
     @staticmethod
-    def get(request: GetRequest):
-        username1, password1, username2, password2, dialogue_id, msg_id, msg_encryption = (bytes.fromhex(x) for x in request.flag_id.split(':'))
+    def get(request: GetRequest) -> Verdict:
+        (
+            username1, password1, 
+            username2, password2, 
+            dialogue_id, msg_id, 
+            msg_encryption, before_encryption
+        ) = (bytes.fromhex(x) for x in request.flag_id.split(':'))
         api1 = API(request.hostname, PORT)
         if verdict := ping(api1):
             return verdict
@@ -320,7 +351,7 @@ class MessageChecker(VulnChecker):
             return verdict
 
         msg = request.flag.encode()
-        if verdict := get_msg(api1, msg, msg_encryption):
+        if verdict := get_msg(api1, msg, before_encryption):
             return verdict
 
         api2 = API(request.hostname, PORT)
@@ -331,7 +362,7 @@ class MessageChecker(VulnChecker):
         user2, verdict = me(api2, username2)
         if verdict:
             return verdict
-        if verdict := get_msg(api2, msg):
+        if verdict := get_msg(api2, msg, msg_encryption):
             return verdict
 
         return Verdict.OK()
