@@ -14,8 +14,8 @@ import (
 )
 
 type BlocksStorage interface {
-	AddBlock(ctx context.Context, block *proto.Block) error
-	GetBlock(ctx context.Context, name string) ([]*proto.Block, error)
+	AddBlock(ctx context.Context, block *proto.Block, key string) error
+	GetBlocks(ctx context.Context, key string) ([]*proto.Block, error)
 	PutSharedBlock(ctx context.Context, block *proto.Block) (*proto.SharedBlock, error)
 	GetShared(ctx context.Context, sharedId string) (*proto.SharedBlock, error)
 }
@@ -33,14 +33,8 @@ func NewEtcdOMCStorage(etcdStorage lib.EtcdStorage, lg *zap.Logger) BlocksStorag
 	}
 }
 
-func (st *BlocksStorageImpl) AddBlock(ctx context.Context, block *proto.Block) error {
-	credentials, err := st.jwtManager.ParseCredentials(ctx)
-	if err != nil {
-		return err
-	}
-
-	//TODO:fix size
-	key := fmt.Sprintf("blocks/%s/%s", credentials.Login, block.Name)
+func (st *BlocksStorageImpl) AddBlock(ctx context.Context, block *proto.Block, id string) error {
+	key := fmt.Sprintf("blocks/%s/%s", id, block.Name)
 
 	marshal, err := lib.Marshal[*proto.Block](block)
 	if err != nil {
@@ -53,14 +47,8 @@ func (st *BlocksStorageImpl) AddBlock(ctx context.Context, block *proto.Block) e
 	return nil
 }
 
-func (st *BlocksStorageImpl) GetBlock(ctx context.Context, name string) ([]*proto.Block, error) {
-	credentials, err := st.jwtManager.ParseCredentials(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	//TODO:fix size
-	key := fmt.Sprintf("blocks/%s/%s", credentials.Login, name)
+func (st *BlocksStorageImpl) GetBlocks(ctx context.Context, token string) ([]*proto.Block, error) {
+	key := fmt.Sprintf("blocks/%s", token)
 	kvs, err := st.storage.GetRange(ctx, key)
 	if err != nil {
 		return nil, err

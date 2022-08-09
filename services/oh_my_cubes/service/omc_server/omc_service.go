@@ -3,26 +3,38 @@ package main
 import (
 	"context"
 	"go.uber.org/zap"
+	"summer-2022/auth"
 	"summer-2022/proto"
 )
 
 type OMCService struct {
 	proto.UnimplementedOMCServer
-	storage BlocksStorage
-	lg      *zap.Logger
+	storage    BlocksStorage
+	jwtManager auth.JWTManager
+	lg         *zap.Logger
 }
 
 func (omc *OMCService) AddBlock(ctx context.Context, block *proto.Block) (*proto.Empty, error) {
-	err := omc.storage.AddBlock(ctx, block)
+	credentials, err := omc.jwtManager.ParseCredentials(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, err
+	err = omc.storage.AddBlock(ctx, block, credentials.Token)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.Empty{}, err
 }
 
-func (omc *OMCService) GetBlocks(id *proto.BlockId, server proto.OMC_GetBlocksServer) error {
-	blocks, err := omc.storage.GetBlock(server.Context(), id.Name)
+func (omc *OMCService) GetBlocks(_ *proto.Empty, server proto.OMC_GetBlocksServer) error {
+	credentials, err := omc.jwtManager.ParseCredentials(server.Context())
+	if err != nil {
+		return err
+	}
+
+	blocks, err := omc.storage.GetBlocks(server.Context(), credentials.Token)
 	if err != nil {
 		return err
 	}

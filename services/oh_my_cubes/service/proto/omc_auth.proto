@@ -9,7 +9,6 @@ service Auth {
 
 message UserInfo{
   string Login = 1;
-  string Password = 2;
 }
 
 message AuthInfo{

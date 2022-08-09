@@ -34,15 +34,16 @@ func NewGRPCMiddlewareImpl(jwtManager JWTManager, credentialsStore CredentialsSt
 func (mid *GRPCMiddlewareImpl) Intercept(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	clientCreds, err := mid.jwtManager.ParseCredentials(ctx)
 	if err != nil {
+		mid.lg.Error("auth fauled", zap.Error(err))
 		return req, err
 	}
 
-	credsFound, err := mid.credentialsStorage.Get(clientCreds.Login)
+	credsFound, err := mid.credentialsStorage.Get(ctx, clientCreds.Login)
 
 	mid.lg.Info("user creds", zap.Reflect("creds", credsFound))
 	mid.lg.Info("client crieds", zap.Reflect("creds", credsFound))
 
-	if credsFound.Password != clientCreds.Password {
+	if credsFound.Token != clientCreds.Token {
 		return nil, errors.New("password mismatch")
 	}
 

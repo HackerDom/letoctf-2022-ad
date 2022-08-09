@@ -22,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OMCClient interface {
-	AddBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error)
-	GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (OMC_GetBlocksClient, error)
+	PutBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error)
+	GetBlocks(ctx context.Context, in *Empty, opts ...grpc.CallOption) (OMC_GetBlocksClient, error)
 	PutShared(ctx context.Context, in *Block, opts ...grpc.CallOption) (*SharedBlockCreateResponse, error)
 	GetShared(ctx context.Context, in *GetSharedBlock, opts ...grpc.CallOption) (*SharedBlock, error)
 }
@@ -36,16 +36,16 @@ func NewOMCClient(cc grpc.ClientConnInterface) OMCClient {
 	return &oMCClient{cc}
 }
 
-func (c *oMCClient) AddBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error) {
+func (c *oMCClient) PutBlock(ctx context.Context, in *Block, opts ...grpc.CallOption) (*Empty, error) {
 	out := new(Empty)
-	err := c.cc.Invoke(ctx, "/proto_omc.OMC/AddBlock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/proto_omc.OMC/PutBlock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *oMCClient) GetBlocks(ctx context.Context, in *BlockId, opts ...grpc.CallOption) (OMC_GetBlocksClient, error) {
+func (c *oMCClient) GetBlocks(ctx context.Context, in *Empty, opts ...grpc.CallOption) (OMC_GetBlocksClient, error) {
 	stream, err := c.cc.NewStream(ctx, &OMC_ServiceDesc.Streams[0], "/proto_omc.OMC/GetBlocks", opts...)
 	if err != nil {
 		return nil, err
@@ -99,8 +99,8 @@ func (c *oMCClient) GetShared(ctx context.Context, in *GetSharedBlock, opts ...g
 // All implementations must embed UnimplementedOMCServer
 // for forward compatibility
 type OMCServer interface {
-	AddBlock(context.Context, *Block) (*Empty, error)
-	GetBlocks(*BlockId, OMC_GetBlocksServer) error
+	PutBlock(context.Context, *Block) (*Empty, error)
+	GetBlocks(*Empty, OMC_GetBlocksServer) error
 	PutShared(context.Context, *Block) (*SharedBlockCreateResponse, error)
 	GetShared(context.Context, *GetSharedBlock) (*SharedBlock, error)
 	mustEmbedUnimplementedOMCServer()
@@ -110,10 +110,10 @@ type OMCServer interface {
 type UnimplementedOMCServer struct {
 }
 
-func (UnimplementedOMCServer) AddBlock(context.Context, *Block) (*Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddBlock not implemented")
+func (UnimplementedOMCServer) PutBlock(context.Context, *Block) (*Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutBlock not implemented")
 }
-func (UnimplementedOMCServer) GetBlocks(*BlockId, OMC_GetBlocksServer) error {
+func (UnimplementedOMCServer) GetBlocks(*Empty, OMC_GetBlocksServer) error {
 	return status.Errorf(codes.Unimplemented, "method GetBlocks not implemented")
 }
 func (UnimplementedOMCServer) PutShared(context.Context, *Block) (*SharedBlockCreateResponse, error) {
@@ -135,26 +135,26 @@ func RegisterOMCServer(s grpc.ServiceRegistrar, srv OMCServer) {
 	s.RegisterService(&OMC_ServiceDesc, srv)
 }
 
-func _OMC_AddBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _OMC_PutBlock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(Block)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OMCServer).AddBlock(ctx, in)
+		return srv.(OMCServer).PutBlock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/proto_omc.OMC/AddBlock",
+		FullMethod: "/proto_omc.OMC/PutBlock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OMCServer).AddBlock(ctx, req.(*Block))
+		return srv.(OMCServer).PutBlock(ctx, req.(*Block))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
 func _OMC_GetBlocks_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(BlockId)
+	m := new(Empty)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -218,8 +218,8 @@ var OMC_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OMCServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "AddBlock",
-			Handler:    _OMC_AddBlock_Handler,
+			MethodName: "PutBlock",
+			Handler:    _OMC_PutBlock_Handler,
 		},
 		{
 			MethodName: "PutShared",

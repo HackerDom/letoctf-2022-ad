@@ -21,8 +21,8 @@ func NewJWTManagerImpl(hmacSampleSecret []byte, lg *zap.Logger) *JWTManagerImpl 
 
 func (mng *JWTManagerImpl) GetToken(user models.Credentials) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user":   user.Login,
-		"secret": user.Password,
+		"user":  user.Login,
+		"token": user.Token,
 	})
 
 	tokenString, err := token.SignedString(mng.hmacSampleSecret)
@@ -54,8 +54,8 @@ func (mng *JWTManagerImpl) parseToken(tokenString string) (models.Credentials, e
 	mng.lg.Info("claims parsed", zap.Reflect("claims", claims))
 
 	return models.Credentials{
-		Login:    claims["user"].(string),
-		Password: claims["secret"].(string),
+		Login: claims["user"].(string),
+		Token: claims["token"].(string),
 	}, nil
 }
 

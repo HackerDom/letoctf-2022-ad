@@ -2,7 +2,8 @@ package auth
 
 import (
 	"context"
-	"errors"
+	"crypto/rand"
+	"encoding/hex"
 	"go.uber.org/zap"
 	"summer-2022/models"
 	"summer-2022/proto"
@@ -24,15 +25,11 @@ func NewAuthService(userStorage CredentialsStorage, jwt JWTManager, lg *zap.Logg
 }
 
 func (auth *AuthService) SignIn(ctx context.Context, userInfo *proto.UserInfo) (*proto.AuthInfo, error) {
-	clientCredentials := models.Credentials{Login: userInfo.Login, Password: userInfo.Password}
+	clientCredentials := models.Credentials{Login: userInfo.Login, Token: GenerateSecureToken(32)}
 
-	foundCreds, err := auth.userStorage.GetOrAdd(userInfo.Login, clientCredentials)
+	err := auth.userStorage.Add(ctx, clientCredentials)
 	if err != nil {
 		return nil, err
-	}
-
-	if clientCredentials.Password != foundCreds.Password {
-		return nil, errors.New("password mismatch")
 	}
 
 	token, err := auth.jwt.GetToken(clientCredentials)
@@ -41,4 +38,12 @@ func (auth *AuthService) SignIn(ctx context.Context, userInfo *proto.UserInfo) (
 	}
 
 	return &proto.AuthInfo{Token: token}, nil
+}
+
+func GenerateSecureToken(length int) string {
+	b := make([]byte, length)
+	if _, err := rand.Read(b); err != nil {
+		panic(err.Error())
+	}
+	return hex.EncodeToString(b)
 }

@@ -2,15 +2,15 @@ package auth
 
 import (
 	"context"
+	"errors"
 	"go.uber.org/zap"
 	"summer-2022/lib"
 	"summer-2022/models"
-	"time"
 )
 
 type CredentialsStorage interface {
-	Get(login string) (models.Credentials, error)
-	GetOrAdd(name string, creds models.Credentials) (models.Credentials, error)
+	Get(ctx context.Context, login string) (models.Credentials, error)
+	Add(ctx context.Context, creds models.Credentials) error
 }
 
 type EtcdCredentialsStorage struct {
@@ -25,10 +25,8 @@ func NewEtcdCredentialsStorage(etcdStorage lib.EtcdStorage, lg *zap.Logger) *Etc
 	}
 }
 
-func (st *EtcdCredentialsStorage) Get(login string) (models.Credentials, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	value, err := st.storage.Get(ctx, "users/"+login)
+func (st *EtcdCredentialsStorage) Get(ctx context.Context, token string) (models.Credentials, error) {
+	value, err := st.storage.Get(ctx, "users/"+token)
 	if err != nil {
 		return models.Credentials{}, err
 	}
@@ -41,23 +39,26 @@ func (st *EtcdCredentialsStorage) Get(login string) (models.Credentials, error) 
 	return *creds, nil
 }
 
-func (st *EtcdCredentialsStorage) GetOrAdd(login string, creds models.Credentials) (models.Credentials, error) {
+func (st *EtcdCredentialsStorage) Add(ctx context.Context, creds models.Credentials) error {
+	key := "users/" + creds.Token
+	exist, err := st.storage.Exist(ctx, key)
+	if err != nil {
+		return err
+	}
+
+	if exist {
+		return errors.New("already exist")
+	}
+
 	value, err := lib.Marshal[models.Credentials](creds)
 	if err != nil {
-		return models.Credentials{}, err
+		return err
 	}
 
-	exist, err := st.Get(login)
-	if err == nil {
-		return exist, nil
-	}
-
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
-	err = st.storage.Put(ctx, "users/"+login, value)
+	err = st.storage.Put(ctx, key, value)
 	if err != nil {
-		return models.Credentials{}, err
+		return err
 	}
 
-	return creds, nil
+	return nil
 }

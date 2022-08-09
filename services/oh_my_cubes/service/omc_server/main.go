@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/gofrs/uuid"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"net"
@@ -42,19 +41,11 @@ func main() {
 	}()
 
 	proto.RegisterOMCServer(omcServer, omcApi)
+	logger.Info("Starting game server")
 	startServer(host, 9090, logger, omcServer)
 }
 
-func run() {
-	uid, _ := uuid.NewV1()
-	v1, _ := uuid.TimestampFromV1(uid)
-	time, _ := v1.Time()
-	ts := time.UnixNano()
-	fmt.Println(time.UnixNano(), ts)
-}
-
 func startServer(host string, port int, logger *zap.Logger, server *grpc.Server) {
-	logger.Info("Starting game server")
 	omcListener, err := net.Listen("tcp", fmt.Sprintf("%s:%d", host, port))
 	if err != nil {
 		logger.Fatal("failed to listen: %v", zap.Error(err))

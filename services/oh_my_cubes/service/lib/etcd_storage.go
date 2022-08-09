@@ -77,6 +77,15 @@ func (etcd *EtcdStoreImpl) GetRange(ctx context.Context, key string) ([]*mvccpb.
 	return result.Kvs, nil
 }
 
+func (etcd *EtcdStoreImpl) Exist(ctx context.Context, key string) (bool, error) {
+	get, err := etcd.client.Get(ctx, key)
+	if err != nil {
+		return false, err
+	}
+
+	return get.Count == 0, nil
+}
+
 func NewEtcdStorage(target string, logger *zap.Logger) EtcdStorage {
 	client, err := clientv3.New(clientv3.Config{
 		Endpoints:   []string{fmt.Sprintf("http://%s", target)},
@@ -95,6 +104,7 @@ func NewEtcdStorage(target string, logger *zap.Logger) EtcdStorage {
 type EtcdStorage interface {
 	Put(ctx context.Context, key string, value string) error
 	Get(ctx context.Context, key string) (string, error)
+	Exist(ctx context.Context, key string) (bool, error)
 	GetRange(ctx context.Context, key string) ([]*mvccpb.KeyValue, error)
 	List(ctx context.Context, key string) ([]string, error)
 }
