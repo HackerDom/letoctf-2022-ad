@@ -12,7 +12,7 @@ SCRIPTS_PATH="/cloud/backend"
 
 DEV_MODE = False
 
-DOMAIN = "cloud.cerebralobserver.ru"
+DOMAIN = "cloud.ad.leto-hackerdom.ru"
 
 RESP_HEADERS = [
     ("Content-Type", "application/json"), 

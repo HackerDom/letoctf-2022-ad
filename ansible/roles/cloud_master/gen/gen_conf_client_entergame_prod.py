@@ -1,9 +1,9 @@
 import os
 import sys
 
-N = 10
+N = 30
 
-SERVER = "team%d.cloud.cerebralobserver.ru"
+SERVER = "team%d.cloud.ad.leto-hackerdom.ru"
 
 CLIENT_DATA = """client
 tls-client
