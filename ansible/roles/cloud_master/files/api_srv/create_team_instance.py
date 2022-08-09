@@ -20,8 +20,8 @@ IMAGE_VM_NAME = "team%d" % TEAM
 DNS_NAME = IMAGE_VM_NAME
 
 
-ROUTER_YA_IMAGE = "fd8rdvp286if4fl1e7as"
-VULNIMAGE_YA_IMAGE = "fd8bkli6g3jr277ofofl"
+ROUTER_YA_IMAGE = "fd8mcvn9q772i7p9eeg6"
+VULNIMAGE_YA_IMAGE = "fd895fe0gi8tvi78kand"
 
 ADMIN_PUBLIC_SSH_KEY = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "admin_key.pub")).read()
 DEPLOY_KEY = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "cloud_deploy_key.pub")).read()

@@ -4,7 +4,7 @@ import sys
 import os
 import secrets
 
-N = 10
+N = 30
 
 def genpass(n=12):
  abc = "abcdefgkmnrtxyzABCDEFGKMNRTXYZ23456789"

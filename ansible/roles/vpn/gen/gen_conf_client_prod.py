@@ -1,9 +1,9 @@
 import os
 import sys
 
-N = 10
+N = 30
 
-SERVER = "game.vpn.cerebralobserver.ru"
+SERVER = "game.vpn.ad.leto-hackerdom.ru"
 
 CLIENT_DATA = """mode p2p
 dev game

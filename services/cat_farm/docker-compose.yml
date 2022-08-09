@@ -1,0 +1,19 @@
+version: '2.2'
+services:
+  cat_farm:
+    image: cat_farm
+    cpus: 1
+    mem_limit: 1G
+    memswap_limit: 1G
+    pids_limit: 8192
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+     - "8888:80"
+    volumes:
+      - ./cats:/app/cats
+      - ./farms:/app/farms
+
+    restart: always
+

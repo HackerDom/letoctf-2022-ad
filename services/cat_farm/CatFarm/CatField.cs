@@ -20,6 +20,20 @@ public class CatField
         Task.Run(KillOldCats);
     }
 
+    public async Task<List<Guid>> MeowMeow(long x, long y)
+    {
+        var foundCats = new List<Guid>();
+        foreach (var cat in knownCats.Select(x => x.Value))
+        {
+            if (Math.Pow(cat.KnownX - x, 2) + Math.Pow(cat.KnownY - y, 2) <= Math.Pow(Constants.MeowMeowRadius, 2))
+            {
+                foundCats.Add(cat.Genome);
+            } 
+        }
+
+        return foundCats;
+    }
+
     public void AddCat(Cat cat) => knownCats[cat.Genome.ToString()] = cat;
     public bool TryGetCat(Guid catId, out Cat cat) => knownCats.TryGetValue(catId.ToString(), out cat);
 
@@ -60,6 +74,8 @@ public class CatField
 
     private async Task WarmUp()
     {
+        if (!Directory.Exists(Constants.CatsDir))
+            return;
         await Parallel.ForEachAsync(Directory.EnumerateFiles(Constants.CatsDir), async (catFile, ct) =>
         {
             try
