@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.9
 
 from gornilo import Checker, PutRequest, GetRequest, CheckRequest, Verdict
 from random import randint
