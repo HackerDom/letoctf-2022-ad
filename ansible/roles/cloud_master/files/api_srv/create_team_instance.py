@@ -21,7 +21,7 @@ DNS_NAME = IMAGE_VM_NAME
 
 
 ROUTER_YA_IMAGE = "fd8mcvn9q772i7p9eeg6"
-VULNIMAGE_YA_IMAGE = "fd895fe0gi8tvi78kand"
+VULNIMAGE_YA_IMAGE = "fd8afn0t7699325g8guo"
 
 ADMIN_PUBLIC_SSH_KEY = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "admin_key.pub")).read()
 DEPLOY_KEY = open(os.path.join(os.path.dirname(os.path.realpath(__file__)), "cloud_deploy_key.pub")).read()
