@@ -45,7 +45,6 @@ router.post('/', async function(req, resp, next) {
 });
 
 router.get('/', async function(req, resp, next) {
-    // TODO: Vuln #1
     let user = await req.db.user.findOne({ where: { id: req.query.usr || req.authedUserId } });
 
     if (!user) {

@@ -12,7 +12,6 @@ class Authenticator {
     }
 
     async append(id) {
-        // TODO: Vuln #2
         this.#n += 1;
         const cookie = crypto.createHash('md5').update(this.#n.toString()).digest("hex");
         if (cookie in this.#sessions)

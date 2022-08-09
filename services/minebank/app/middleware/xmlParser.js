@@ -17,7 +17,6 @@ module.exports = function (req, resp, next) {
             resp.status(400).send(builder.build({xml: {msg: "xml field not found"}}))
             return
         }
-        // TODO: Vuln #3 -- Prototype pollution
         concatXML(req, jsonXml)
     } catch (e) {
         console.log(e)
