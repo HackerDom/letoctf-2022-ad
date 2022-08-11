@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option go_package = "../proto";
+package proto_omc;
+
+service Auth {
+  rpc SignUp(UserInfo) returns (AuthInfo)  {}
+}
+
+message UserInfo{
+  string Login = 1;
+}
+
+message AuthInfo{
+  string Token = 1;
+}

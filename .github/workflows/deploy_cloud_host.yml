@@ -1,0 +1,16 @@
+name: Deploy Cloud host
+on:
+  workflow_dispatch: {}
+
+jobs:
+  rebuild_image:
+    name: Deploy Cloud host
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Run ansible
+      run: |
+        cd ansible
+        ansible-playbook cloud_master.yaml -i inventory.cfg --private-key /home/mikhalych/cloud_private_key

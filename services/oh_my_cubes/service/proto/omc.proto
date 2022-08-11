@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "../proto";
+package proto_omc;
+
+service OMC {
+  rpc PutBlock(Block) returns (Empty){}
+  rpc GetBlocks(Empty) returns (stream Block){}
+  rpc PutShared(Block) returns (SharedBlockCreateResponse){}
+  rpc GetShared(GetSharedBlock) returns (SharedBlock){}
+  rpc GetSharedList(Empty) returns (SharedList){}
+}
+
+message SharedList{
+  repeated string Ids =1;
+}
+
+message GetSharedBlock {
+  string SharedId = 1;
+  string AdminKey = 2;
+}
+
+message SharedBlockCreateResponse {
+  BlockMetadata Metadata =1;
+  string AdminKey = 2;
+}
+
+message SharedBlock{
+  BlockMetadata Metadata = 1;
+  Block Block = 2;
+  string AdminKey = 3;
+}
+
+message BlockMetadata{
+  int64 CreatedAt = 1;
+  string SharedId = 2;
+}
+
+message BlockId{
+  string Name = 1;
+}
+
+message Block{
+  string Name = 1;
+  string SecretNotes = 2;
+}
+
+message Empty{}
+
